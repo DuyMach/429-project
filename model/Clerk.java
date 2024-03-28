@@ -127,6 +127,11 @@ public class Clerk implements IView, IModel
             case "ListCheckedOutInventory":
                 createAndShowListCheckedOutInventoryView();
                 break;
+			//---AddInventoryItem Submit Button---
+			case "AddInventoryItem":
+				//Button takes properties and creates new Iventory item
+				System.out.println("WIP");
+				break;
             default:
                 System.out.println("Invalid key.");
         }
@@ -178,7 +183,8 @@ public class Clerk implements IView, IModel
 	 * Method calls ViewFactory to create the view
 	 */
     private void createAndShowAddInventoryView() {
-        Scene currentScene = (Scene)myViews.get("AddInventoryItemView");
+
+    Scene currentScene = (Scene)myViews.get("AddInventoryItemView");
 
 		if (currentScene == null){
 			View newView = ViewFactory.createView("AddInventoryItemView", this);

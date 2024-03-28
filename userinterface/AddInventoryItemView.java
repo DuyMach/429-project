@@ -1,10 +1,14 @@
 //Specify package
 package userinterface;
 
+import java.sql.SQLException;
+import java.util.Observable;
 // system imports
 import java.util.Properties;
 
 import javafx.event.Event;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -22,6 +26,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.control.*;
 import model.InventoryItem;
+import javafx.scene.Scene;
+import javafx.scene.input.*;
+
 // project imports
 import impresario.IModel;
 
@@ -33,6 +40,20 @@ public class AddInventoryItemView extends View {
 
     //error message
     private MessageView statusLog;
+
+    //GUI Textfield components
+    protected TextField barcodeField;
+    protected TextField genderField;
+    protected TextField articleField;
+    protected TextField colorField;
+    protected TextField color2Field;
+    protected TextField sizeField;
+    protected TextField brandField;
+    protected TextField notesField;
+    protected TextField fnameField;
+    protected TextField lnameField;
+    protected TextField phoneField;
+    protected TextField emailField;
 
     /*CONSTRUCTOR
      * Takes model Object
@@ -94,7 +115,7 @@ public class AddInventoryItemView extends View {
         barcodeLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(barcodeLabel, 0, 0);
 
-        TextField barcodeField = new TextField();
+        barcodeField = new TextField();
         barcodeField.setEditable(true);
         grid.add(barcodeField, 1, 0);
 
@@ -104,7 +125,7 @@ public class AddInventoryItemView extends View {
         genderLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(genderLabel, 0, 1);
         
-        TextField genderField = new TextField();
+        genderField = new TextField();
         genderField.setEditable(true);
         grid.add(genderField, 1, 1);
 
@@ -114,7 +135,7 @@ public class AddInventoryItemView extends View {
         articleLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(articleLabel, 0, 2);
 
-        TextField articleField = new TextField();
+        articleField = new TextField();
         articleField.setEditable(true);
         grid.add(articleField, 1, 2);
 
@@ -124,7 +145,7 @@ public class AddInventoryItemView extends View {
         colorLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(colorLabel, 0, 3);
 
-        TextField colorField = new TextField();
+        colorField = new TextField();
         colorField.setEditable(true);
         grid.add(colorField, 1, 3);
 
@@ -134,7 +155,7 @@ public class AddInventoryItemView extends View {
         color2Label.setTextAlignment(TextAlignment.RIGHT);
         grid.add(color2Label, 0, 4);
 
-        TextField color2Field = new TextField();
+        color2Field = new TextField();
         color2Field.setEditable(true);
         grid.add(color2Field, 1, 4);
 
@@ -144,7 +165,7 @@ public class AddInventoryItemView extends View {
         sizeLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(sizeLabel, 0, 5);
 
-        TextField sizeField = new TextField();
+        sizeField = new TextField();
         sizeField.setEditable(true);
         grid.add(sizeField, 1, 5);
 
@@ -154,7 +175,7 @@ public class AddInventoryItemView extends View {
         brandLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(brandLabel, 0, 6);
 
-        TextField brandField = new TextField();
+        brandField = new TextField();
         brandField.setEditable(true);
         grid.add(brandField, 1, 6);
 
@@ -164,7 +185,7 @@ public class AddInventoryItemView extends View {
         notesLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(notesLabel, 0, 7);
 
-        TextField notesField = new TextField();
+        notesField = new TextField();
         notesField.setEditable(true);
         grid.add(notesField, 1, 7);
 
@@ -174,7 +195,7 @@ public class AddInventoryItemView extends View {
         fnameLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(fnameLabel, 0, 8);
         
-        TextField fnameField = new TextField();
+        fnameField = new TextField();
         fnameField.setEditable(true);
         grid.add(fnameField, 1, 8);
 
@@ -184,7 +205,7 @@ public class AddInventoryItemView extends View {
         lnameLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(lnameLabel, 0, 9);
         
-        TextField lnameField = new TextField();
+        lnameField = new TextField();
         lnameField.setEditable(true);
         grid.add(lnameField, 1, 9);
 
@@ -194,7 +215,7 @@ public class AddInventoryItemView extends View {
         phoneLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(phoneLabel, 0, 10);
 
-        TextField phoneField = new TextField();
+        phoneField = new TextField();
         phoneField.setEditable(true);  
         grid.add(phoneField, 1, 10);
 
@@ -204,10 +225,79 @@ public class AddInventoryItemView extends View {
         emailLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(emailLabel, 0, 11);
 
-        TextField emailField = new TextField();
+        emailField = new TextField();
         emailField.setEditable(true);
         grid.add(emailField, 1, 11);
 
+        /*barcodeField upon losing focus:
+         * -verify user input
+         * -parse gender, article id, and primary color
+         * -all other textfields will become editable
+         */
+        barcodeField.focusedProperty().addListener(new ChangeListener<Boolean>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
+            {               
+                //String from barcode field
+                String barcodeTempString = barcodeField.getText();
+                
+                /*Try block will check if barcode was numeric. If so:
+                 * -Verify input is 8 digits
+                 * -Parse input for gender, article, color
+                 */
+                try {
+                    int barcodeInt = Integer.parseInt(barcodeTempString);
+
+                    //Check that input is 8 digits
+                    if (barcodeTempString.length() != 8){
+                        barcodeField.setText("Barcode was incorrect length. Please try again");                    
+                    } else {
+                        //parse barcode for info
+                        //char[] barcodeArray = barcodeTempString.toCharArray();
+
+                        //Determine gender from first digit
+                        //char genderChar = barcodeArray[0];
+                        String genderString = barcodeTempString.substring(0, 0);
+                        if (genderString == "0"){
+                            genderField.setText("M");
+                            genderField.setEditable(true);
+                        } else
+                        if (genderString == "1"){
+                            genderField.setText("W");
+                            genderField.setEditable(true);
+                        } else {
+                            genderField.setText("Barcode was incorrect");
+                            genderField.setEditable(false);
+                        };//End gender verification
+
+                        //Determine article type from next two digits
+                        String articleBarPrefix = barcodeTempString.substring(1, 3);
+                        try {
+                            Article article = new Article(articleBarPrefix);
+                            articleField.setText(article.getState("name"));
+                            articleField.setEditable(true);
+                        } catch (SQLException exc) {
+                            
+                        }//End article verification
+
+                        //Determine color1 from next two digits
+                        String colorBarPrefix = barcodeTempString.substring(3, 5);
+                        try {
+                            Color color = new Color(colorBarPrefix);
+                            colorField.setText(color.getState("name"));
+                            colorField.setEditable(true);
+                        } catch (SQLException exc) {
+
+                        }//End color verification
+                    }//End if else for barcode parse
+                } catch (NumberFormatException exc){
+                    barcodeField.setText("Barcode should be numerical");
+                }//End trycatch block                
+            }//End change            
+        });//End focusProperty
+
+        //====BUTTONS=====
         //Setup separate Hbox for submit and cancel button
         HBox buttons = new HBox(10);
         buttons.setAlignment(Pos.BOTTOM_CENTER);
@@ -249,6 +339,41 @@ public class AddInventoryItemView extends View {
      *  WIP
      */
     public void processSubAction(Event e){
+        //Validate user input
+
+        //Parse barcode for article, gender, primary color
+
+        //Convert input to strings
+        String barcodeString = barcodeField.getText();
+        String genderString = genderField.getText();
+        String articleString = articleField.getText();
+        String colorString = colorField.getText();
+        String color2String = colorField.getText();
+        String sizeString = sizeField.getText();
+        String brandString = brandField.getText();
+        String notesString = notesField.getText();
+        String fnameString = fnameField.getText();
+        String lnameString = lnameField.getText();
+        String phoneString = phoneField.getText();
+        String emailString = emailField.getText();
+
+        //Create properties and keys
+        Properties insertProperties = new Properties();
+        insertProperties.setProperty("barcode", barcodeString);
+        insertProperties.setProperty("gender", genderString);
+        insertProperties.setProperty("size", sizeString);
+        insertProperties.setProperty("articleTypeId", articleString);
+        insertProperties.setProperty("color1Id", colorString);
+        insertProperties.setProperty("color2Id", color2String);
+        insertProperties.setProperty("brand", brandString);
+        insertProperties.setProperty("notes", notesString);
+        insertProperties.setProperty("donorLastName", lnameString);
+        insertProperties.setProperty("donorFirstName", fnameString);
+        insertProperties.setProperty("donorPhone", phoneString);
+        insertProperties.setProperty("donorEmail", emailString);
+
+        //Call Clerk stateChangeRequest Method to create InventoryItem
+        myModel.stateChangeRequest("AddInventoryItem", insertProperties);
 
     }
 

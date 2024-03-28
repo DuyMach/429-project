@@ -20,7 +20,7 @@ import userinterface.ViewFactory;
 public class InventoryItem extends EntityBase implements IView {
     
     //Declare string of table name to reference
-    private static final String myTableName = "Rolodex";
+    private static final String myTableName = "Inventory";
 
     //Properties Object declared
     protected Properties dependencies;
@@ -106,10 +106,12 @@ public class InventoryItem extends EntityBase implements IView {
     }
 
 
-    @Override
+    //Get property method
     public Object getState(String key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getState'");
+        if (key.equals("UpdateStatusMessage") == true)
+            return updateStatusMessage;
+
+        return persistentState.getProperty(key);
     }
 
 

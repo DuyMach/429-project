@@ -13,10 +13,13 @@ public class TransactionFactory {
                 // retValue = new AddColorTransaction();
                 break;
             case "ModifyColor":
-                retValue = new ModifyColorTransaction();
+                // retValue = new ModifyColorTransaction();
                 break;
             case "DeleteColor":
                 // retValue = new DeleteColorTransaction();
+                break;
+            case "AddArticleType":
+                retValue = new AddArticleTypeTransaction();
                 break;
             default:
                 System.err.println("Invalid transaction type");

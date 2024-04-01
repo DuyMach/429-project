@@ -16,22 +16,22 @@ import userinterface.ViewFactory;
 
 /** The class containing the ModifyColorTransaction for the ATM application */
 //==============================================================
-public class ModifyColorTransaction extends Transaction {
+public class AddArticleTypeTransaction extends Transaction {
 	private String transactionErrorMessage = "";
 
-	private ColorCollection colorCollection;
+	private ArticleType articleType;
     private String id;
     private String description;
     private String barcodePrefix;
     private String alphaCode;
 
-	public ModifyColorTransaction() throws Exception {
+	public AddArticleTypeTransaction() throws Exception {
 		super();
 
         try {
-            ColorCollection colors = new ColorCollection();
-            colors.getColors();
-            colorCollection = (ColorCollection)colors.getState("ColorCollection");
+            articleType = new ArticleType();
+            // colors.getColors();
+            // colorCollection = (ColorCollection)colors.getState("ColorCollection");
         }
         catch (Exception exc) {
             System.err.println(exc);
@@ -41,7 +41,7 @@ public class ModifyColorTransaction extends Transaction {
 	//----------------------------------------------------------
 	protected void setDependencies() {
 		dependencies = new Properties();
-		dependencies.setProperty("DoModifyColor", "TransactionError");
+		dependencies.setProperty("DoAddArticle", "TransactionError");
 		dependencies.setProperty("CancelModifyColor", "CancelTransaction");
 		dependencies.setProperty("OK", "CancelTransaction");
 
@@ -58,6 +58,8 @@ public class ModifyColorTransaction extends Transaction {
         description = props.getProperty("description");
         barcodePrefix = props.getProperty("barcodePrefix");
         alphaCode = props.getProperty("alphaCode");
+		articleType = new ArticleType(props);
+		articleType.save();
 	}
 
 	//-----------------------------------------------------------
@@ -65,8 +67,6 @@ public class ModifyColorTransaction extends Transaction {
         switch (key) {
             case "TransactionError":
                 return transactionErrorMessage;
-            case "ColorCollection":
-                return colorCollection;
             case "Id":
                 return id;
             case "Description":
@@ -76,7 +76,7 @@ public class ModifyColorTransaction extends Transaction {
             case "AlphaCode":
                 return alphaCode;
             default:
-                System.err.println("ModifyColorTransaction: invalid key for getState: "+key);
+                System.err.println("ModifyColorTransaction: invalid key for getState: "+ key);
                 break;
 		}
 		return null;
@@ -88,7 +88,7 @@ public class ModifyColorTransaction extends Transaction {
             case "DoYourJob":
                 doYourJob();
                 break;
-            case "DoModifyColor":   // gets called from ModifyColorTransactionView
+            case "DoAddArticleType":   // gets called from ModifyColorTransactionView
                 processTransaction((Properties)value);
                 break;
             default:
@@ -103,13 +103,13 @@ public class ModifyColorTransaction extends Transaction {
 	 */
 	//------------------------------------------------------
 	protected Scene createView() {
-		Scene currentScene = myViews.get("ColorCollectionView");
+		Scene currentScene = myViews.get("ArticleTypeView");
 
 		if (currentScene == null) {
 			// create our new view
-			View newView = ViewFactory.createView("ColorCollectionView", this);
+			View newView = ViewFactory.createView("ArticleTypeView", this);
 			currentScene = new Scene(newView);
-			myViews.put("ColorCollectionView", currentScene);
+			myViews.put("ArticleTypeView", currentScene);
 
 			return currentScene;
 		}

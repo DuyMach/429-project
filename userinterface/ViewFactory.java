@@ -9,8 +9,10 @@ public class ViewFactory {
 		switch(viewName) {
 			case "ClerkView":
 				return new ClerkView(model);
-			case "ColorCollectionView":
-				return new ColorCollectionView(model);
+			// case "ColorCollectionView":
+			// 	return new ColorCollectionView(model);
+			case "ArticleTypeView":
+				return new ArticleTypeView(model);
 			default:
 				return null;
 		}

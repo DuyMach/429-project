@@ -5,15 +5,19 @@ import impresario.IModel;
 //==============================================================================
 public class ViewFactory {
 
-	public static View createView(String viewName, IModel model)
-	{
-		if (viewName.equals("ClerkView")) {
-			return new ClerkView(model);
-		} else 
-		if (viewName.equals("AddInventoryItemView")){
-			return new AddInventoryItemView(model);
+	public static View createView(String viewName, IModel model) {
+		switch(viewName) {
+			case "ClerkView":
+				return new ClerkView(model);
+			case "ColorCollectionView":
+				return new ColorCollectionView(model);
+			case "ModifyColorView":
+				return new ModifyColorView(model);
+			case "AddInventoryItemView":
+				return new AddInventoryItemView(model);
+			default:
+				return null;
 		}
-		return null;
 	}
 
 

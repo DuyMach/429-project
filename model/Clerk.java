@@ -5,6 +5,7 @@ import java.sql.SQLException;
 // system imports
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.Stack;
 
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -84,54 +85,36 @@ public class Clerk implements IView, IModel
 	 * @return	Value associated with the field
 	 */
 	//----------------------------------------------------------
-	public Object getState(String key)
-	{
-		// if (key.equals("BookSubmit") == true)
-		// 	return bookSubmitStatus;
-		// else if (key.equals("PatronSubmit") == true)
-		// 	return patronSubmitStatus;
-        // else
-		 	return "";
+	public Object getState(String key) {
+		return "";
 	}
 
 	//----------------------------------------------------------------
 	public void stateChangeRequest(String key, Object value) {
 		switch (key) {
             case "AddArticleType":
-                createAndShowAddArticleTypeView();
-                break;
             case "ModifyArticleType":
             case "DeleteArticleType":
-                createAndShowSearchArticleTypeView(key);
-                break;
             case "AddColor":
-                createAndShowAddColorView();
-                break;
             case "ModifyColor":
             case "DeleteColor":
-                createAndShowSelectColorView(key);
-                break;
-            case "AddInventory":
-                createAndShowAddInventoryView();
-                break;
-            case "ModifyInventory":
-            case "DeleteInventory":
-                createAndShowScanBarcodeView(key);
-                break;
-            case "CheckoutInventory":
-                createAndShowCheckoutInventoryView();
-                break;
-            case "ListAvailableInventory":
-                createAndShowListAvailableInventoryView();
-                break;
-            case "ListCheckedOutInventory":
-                createAndShowListCheckedOutInventoryView();
-                break;
-			//---AddInventoryItem Submit Button---
-			case "AddInventoryItem":
-				//Button takes properties and creates new Iventory item
-				System.out.println("WIP");
+			case "AddInventory":
+				createAndShowAddInventoryView();
 				break;
+			case "ModifyInventory":
+			case "DeleteInventory":
+			case "CheckoutInventory":
+			case "ListAvailableInventory":
+			case "ListCheckedOutInventory":
+				doTransaction(key);
+				break;
+			case "CancelTransaction":
+				createAndShowClerkView();
+				break;
+			// case "ColorSelected":
+			// 	String colorId = ((Properties)value).getProperty("id");
+			// 	handleColorSelected(colorId);
+			// 	break;
             default:
                 System.out.println("Invalid key.");
         }
@@ -141,15 +124,26 @@ public class Clerk implements IView, IModel
 
 	/** Called via the IView relationship */
 	//----------------------------------------------------------
-	public void updateState(String key, Object value)
-	{
-		// DEBUG System.out.println("Teller.updateState: key: " + key);
-
+	public void updateState(String key, Object value) {
 		stateChangeRequest(key, value);
 	}
 
-	
-	//------------------------------------------------------------
+	public void doTransaction(String transactionType) {
+		try {
+			Transaction trans = TransactionFactory.createTransaction(transactionType);
+
+			trans.subscribe("CancelTransaction", this);
+			trans.stateChangeRequest("DoYourJob", "");
+		}
+		catch (Exception ex) {
+			System.err.println(ex);
+		}
+	}
+
+	private void handleColorCollection() {
+		
+	}
+
 	private void createAndShowClerkView() {
 		Scene currentScene = (Scene)myViews.get("ClerkView");
 
@@ -166,7 +160,7 @@ public class Clerk implements IView, IModel
         System.out.println("add article type not implemented");
     }
 
-    private void createAndShowSearchArticleTypeView(String context) {
+    private void createAndShowSearchArticleTypeView() {
         System.out.println("search article type not implemented");
     }
 
@@ -174,14 +168,6 @@ public class Clerk implements IView, IModel
         System.out.println("add color not implemented");
     }
 
-    private void createAndShowSelectColorView(String context) {
-        System.out.println("select color not implemented");
-    }
-
-	//------------------------------------------------------------------
-	/*createAndShowAddInventoryView
-	 * Method calls ViewFactory to create the view
-	 */
     private void createAndShowAddInventoryView() {
 
     Scene currentScene = (Scene)myViews.get("AddInventoryItemView");
@@ -195,7 +181,7 @@ public class Clerk implements IView, IModel
 		swapToView(currentScene);
     }//End createAndShowAddInventoryView---------------------------------
 
-    private void createAndShowScanBarcodeView(String context) {
+    private void createAndShowScanBarcodeView() {
         System.out.println("scan barcode not implemented");
     }
 

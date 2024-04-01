@@ -15,6 +15,8 @@ public class ViewFactory {
 				return new ModifyColorView(model);
 			case "AddInventoryItemView":
 				return new AddInventoryItemView(model);
+			case "SearchArticleTypeView":
+				return new SearchArticleTypeView(model);
 			default:
 				return null;
 		}

@@ -95,6 +95,8 @@ public class Clerk implements IView, IModel
             case "AddArticleType":
             case "ModifyArticleType":
             case "DeleteArticleType":
+				createAndShowSearchArticleTypeView();
+				break;
             case "AddColor":
             case "ModifyColor":
             case "DeleteColor":
@@ -160,13 +162,23 @@ public class Clerk implements IView, IModel
         System.out.println("add article type not implemented");
     }
 
+	//------------------------------------------------------------------------------------
     private void createAndShowSearchArticleTypeView() {
-        System.out.println("search article type not implemented");
+        //System.out.println("search article type not implemented");
+		Scene currentScene = (Scene)myViews.get("SearchArticleTypeView");
+
+		if (currentScene == null) {
+			View newView = ViewFactory.createView("SearchArticleTypeView", this);
+			currentScene = new Scene(newView);
+			myViews.put("SearchArticleTypeView", currentScene);
+		}
+				
+		swapToView(currentScene);
     }
 
     private void createAndShowAddColorView() {
         System.out.println("add color not implemented");
-    }
+    }//End searchArticleTypeView-------------------------------------------------------------
 
     private void createAndShowAddInventoryView() {
 

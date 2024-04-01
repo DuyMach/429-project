@@ -18,6 +18,8 @@ public class TransactionFactory {
             case "DeleteColor":
                 // retValue = new DeleteColorTransaction();
                 break;
+            case "DeleteArticleType":
+                retValue = new DeleteArticleTypeTransaction();
             default:
                 System.err.println("Invalid transaction type");
         }

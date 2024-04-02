@@ -27,7 +27,7 @@ public class DeleteArticleTypeTransaction extends Transaction {
 
         try {
             ArticleTypeCollection articleTypes = new ArticleTypeCollection();
-            articleTypes.getColors();
+            //articleTypes.getColors();
             articleTypeCollection = (ArticleTypeCollection)articleTypes.getState("ColorCollection");
         }
         catch (Exception exc) {
@@ -54,7 +54,7 @@ public class DeleteArticleTypeTransaction extends Transaction {
         selectedArticleType.update();
         transactionStatusMessage = (String)selectedArticleType.getState("UpdateStatusMessage");
         try {
-            articleTypeCollection.getColors();
+            //articleTypeCollection.getArticleTypes();
         }
         catch (Exception exc) {
             System.err.println(exc);
@@ -88,7 +88,7 @@ public class DeleteArticleTypeTransaction extends Transaction {
             case "DoYourJob":
                 doYourJob();
                 break;
-            case "DoDeleteArticleType":   // called from DeleteColorView on submit
+            case "DoDeleteArticleType":   // called from DeleteArticleTypeView on submit
                 processTransaction();
                 break;
             case "ArticleTypeSelected":
@@ -103,7 +103,7 @@ public class DeleteArticleTypeTransaction extends Transaction {
 	}
 
 	protected Scene createView() {
-        View newView = ViewFactory.createView("ArticleTypeCollectionView", this);
+        View newView = ViewFactory.createView("DeleteArticleTypeView", this);
         Scene currentScene = new Scene(newView);
         myViews.put("ArticleTypeCollectionView", currentScene);
 

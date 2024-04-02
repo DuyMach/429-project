@@ -95,7 +95,7 @@ public class Clerk implements IView, IModel
             case "AddArticleType":
             case "ModifyArticleType":
             case "DeleteArticleType":
-				createAndShowSearchArticleTypeView();
+				doTransaction(key);
 				break;
             case "AddColor":
             case "ModifyColor":
@@ -165,6 +165,7 @@ public class Clerk implements IView, IModel
 	//------------------------------------------------------------------------------------
     private void createAndShowSearchArticleTypeView() {
         //System.out.println("search article type not implemented");
+		System.out.println("test");
 		Scene currentScene = (Scene)myViews.get("SearchArticleTypeView");
 
 		if (currentScene == null) {

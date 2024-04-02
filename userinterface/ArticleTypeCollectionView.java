@@ -51,7 +51,6 @@ public class ArticleTypeCollectionView extends View
 	protected Button submitButton;
 
 	protected TextField description;
-    protected TextField barcodePrefix;
     protected TextField alphaCode;
     protected TextField status;
 
@@ -60,7 +59,7 @@ public class ArticleTypeCollectionView extends View
 
 	//--------------------------------------------------------------------------
 	public ArticleTypeCollectionView(IModel wsc) {
-		super(wsc, "ColorCollectionView");
+		super(wsc, "ArticleTypeCollectionView");
 
 		// create a container for showing the contents
 		VBox container = new VBox(10);
@@ -141,53 +140,28 @@ public class ArticleTypeCollectionView extends View
         prompt.setFill(Color.BLACK);
         grid.add(prompt, 0, 0, 2, 1);
 
-        Text barcodeLabel = new Text(" Barcode Prefix : ");
         Font myFont = Font.font("Helvetica", FontWeight.BOLD, 12);
-        barcodeLabel.setFont(myFont);
-        barcodeLabel.setWrappingWidth(150);
-        barcodeLabel.setTextAlignment(TextAlignment.RIGHT);
-        grid.add(barcodeLabel, 0, 1);
-
-        barcodePrefix = new TextField();
-        barcodePrefix.setEditable(true);
-        grid.add(barcodePrefix, 1, 1);
-
+    
         Text aplhaCodeLabel = new Text(" Alpha Code Label : ");
         aplhaCodeLabel.setFont(myFont);
         aplhaCodeLabel.setWrappingWidth(150);
         aplhaCodeLabel.setTextAlignment(TextAlignment.RIGHT);
-        grid.add(aplhaCodeLabel, 0, 2);
+        grid.add(aplhaCodeLabel, 0, 1);
 
         alphaCode = new TextField();
         alphaCode.setEditable(true);
-        grid.add(alphaCode, 1, 2);
+        grid.add(alphaCode, 1, 1);
 
         Text descriptionLabel = new Text(" Description: ");
         descriptionLabel.setFont(myFont);
         descriptionLabel.setWrappingWidth(150);
         descriptionLabel.setTextAlignment(TextAlignment.RIGHT);
-        grid.add(descriptionLabel, 0, 3);
+        grid.add(descriptionLabel, 0, 2);
 
         description = new TextField();
         description.setEditable(true);
-        grid.add(description, 1, 3);
+        grid.add(description, 1, 2);
 
-        Text statusLabel = new Text(" Status : ");
-        statusLabel.setFont(myFont);
-        statusLabel.setWrappingWidth(150);
-        statusLabel.setTextAlignment(TextAlignment.RIGHT);
-        grid.add(statusLabel, 0, 4);
-
-        status = new TextField();
-        status.setEditable(true);
-        status.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                clearErrorMessage();
-                myModel.stateChangeRequest("ServiceCharge", status.getText());
-            }
-        });
-        grid.add(status, 1, 4);
 
 		tableOfArticleTypes = new TableView<ArticleTypeTableModel>();
 		tableOfArticleTypes.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -315,8 +289,7 @@ public class ArticleTypeCollectionView extends View
 
 	public Properties getInput() {
 		Properties props = new Properties();
-		props.setProperty("description", description.getText());
-		props.setProperty("barcodePrefix", barcodePrefix.getText());
+		// props.setProperty("description", description.getText());
 		props.setProperty("alphaCode", alphaCode.getText());
 		return props;
 	}

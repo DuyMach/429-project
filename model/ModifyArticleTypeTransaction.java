@@ -19,7 +19,7 @@ import userinterface.ViewFactory;
 public class ModifyArticleTypeTransaction extends Transaction {
 	private String transactionErrorMessage = "";
 
-	private ArticleTypeCollection colorCollection;
+	private ArticleTypeCollection articleTypeCollection;
     private String id;
     private String description;
     private String barcodePrefix;
@@ -31,7 +31,7 @@ public class ModifyArticleTypeTransaction extends Transaction {
         try {
             ArticleTypeCollection articleTypes = new ArticleTypeCollection();
             articleTypes.getArticleTypes();
-            colorCollection = (ArticleTypeCollection)articleTypes.getState("ColorCollection");
+            articleTypeCollection = (ArticleTypeCollection)articleTypes.getState("ArticleTypeCollection");
         }
         catch (Exception exc) {
             System.err.println(exc);
@@ -54,10 +54,12 @@ public class ModifyArticleTypeTransaction extends Transaction {
 	 */
 	//----------------------------------------------------------
 	public void processTransaction(Properties props) {
-		id = props.getProperty("id");
-        description = props.getProperty("description");
-        barcodePrefix = props.getProperty("barcodePrefix");
+		// id = props.getProperty("id");
+        // description = props.getProperty("description");
+        // barcodePrefix = props.getProperty("barcodePrefix");
         alphaCode = props.getProperty("alphaCode");
+		articleTypeCollection = new ArticleTypeCollection();
+		articleTypeCollection.findArticleTypeAlphaCode(alphaCode);
 	}
 
 	//-----------------------------------------------------------
@@ -65,8 +67,8 @@ public class ModifyArticleTypeTransaction extends Transaction {
         switch (key) {
             case "TransactionError":
                 return transactionErrorMessage;
-            case "ColorCollection":
-                return colorCollection;
+            case "ArticleTypeCollection":
+                return articleTypeCollection;
             case "Id":
                 return id;
             case "Description":
@@ -88,11 +90,11 @@ public class ModifyArticleTypeTransaction extends Transaction {
             case "DoYourJob":
                 doYourJob();
                 break;
-            case "DoModifyColor":   // gets called from ModifyColorTransactionView
+            case "DoModifyArticleType":   // gets called from ModifyColorTransactionView
                 processTransaction((Properties)value);
                 break;
             default:
-                System.err.println("ModifyColorTransaction: invalid key for stateChangeRequest");
+                System.err.println("ModifyArticleTypeTransaction: invalid key for stateChangeRequest" + key);
         }
 		myRegistry.updateSubscribers(key, this);
 	}

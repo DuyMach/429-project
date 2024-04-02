@@ -290,8 +290,31 @@ public class ArticleTypeCollectionView extends View
 
 	public Properties getInput() {
 		Properties props = new Properties();
-		props.setProperty("description", description.getText());
-		// props.setProperty("alphaCode", alphaCode.getText());
+
+		try {
+            String descriptionString = description.getText();
+            String alphaCodeString = alphaCode.getText();
+
+            if (alphaCodeString.isEmpty() && descriptionString.isEmpty()) {
+				return props;
+			}
+
+			if (!alphaCodeString.isEmpty()) {
+				props.setProperty("alphaCode", alphaCodeString);
+			} 
+
+			if (!descriptionString.isEmpty()) {
+				props.setProperty("description", descriptionString);
+			}
+            
+        }
+        catch(NullPointerException e ){
+
+        }
+        catch (Exception e) {
+
+        }
+
 		return props;
 	}
 	/*

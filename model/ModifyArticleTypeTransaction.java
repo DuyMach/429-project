@@ -53,12 +53,18 @@ public class ModifyArticleTypeTransaction extends Transaction {
 	 */
 	//----------------------------------------------------------
 	public void processTransaction(Properties props) {
-		// id = props.getProperty("id");
         description = props.getProperty("description");
-        // barcodePrefix = props.getProperty("barcodePrefix");
         alphaCode = props.getProperty("alphaCode");
 		articleTypeCollection = new ArticleTypeCollection();
-		articleTypeCollection.findArticleTypeDesc(description);
+
+		if (!(alphaCode == null)) {
+			articleTypeCollection.findArticleTypeAlphaCode(alphaCode);
+			alphaCode = null;
+		} else if (!(description == null)){
+			articleTypeCollection.findArticleTypeDesc(description);
+			description = null;
+		}
+		
 	}
 
 	//-----------------------------------------------------------

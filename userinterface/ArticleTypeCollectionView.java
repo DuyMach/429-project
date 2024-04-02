@@ -25,6 +25,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -37,22 +38,28 @@ import java.util.Properties;
 
 // project imports
 import impresario.IModel;
-import model.Color;
-import model.ColorCollection;
+import model.ArticleType;
+import model.ArticleTypeCollection;
+
 
 //==============================================================================
-public class ColorCollectionView extends View
+public class ArticleTypeCollectionView extends View
 {
-	protected TableView<ColorTableModel> tableOfColors;
+	protected TableView<ArticleTypeTableModel> tableOfArticleTypes;
+	protected ArticleTypeCollection articleTypeCollection;
 	protected Button cancelButton;
 	protected Button submitButton;
+
+	protected TextField description;
+    protected TextField barcodePrefix;
+    protected TextField alphaCode;
+    protected TextField status;
 
 	protected MessageView statusLog;
 
 
 	//--------------------------------------------------------------------------
-	public ColorCollectionView(IModel wsc)
-	{
+	public ArticleTypeCollectionView(IModel wsc) {
 		super(wsc, "ColorCollectionView");
 
 		// create a container for showing the contents
@@ -72,37 +79,29 @@ public class ColorCollectionView extends View
 	}
 
 	//--------------------------------------------------------------------------
-	protected void populateFields()
-	{
+	protected void populateFields() {
 		getEntryTableModelValues();
 	}
 
 	//--------------------------------------------------------------------------
-	protected void getEntryTableModelValues()
-	{
-		
-		ObservableList<ColorTableModel> tableData = FXCollections.observableArrayList();
-		try
-		{
-			ColorCollection colorCollection = (ColorCollection)myModel.getState("ColorCollection");
-			colorCollection.display();
-			System.out.println("get table values");
-			System.out.println(colorCollection);
+	protected void getEntryTableModelValues() {
+		ObservableList<ArticleTypeTableModel> tableData = FXCollections.observableArrayList();
+		try {
+			articleTypeCollection = (ArticleTypeCollection)myModel.getState("ArticleTypeCollection");
 
-	 		Vector entryList = (Vector)colorCollection.getState("Colors");
+	 		Vector entryList = (Vector)articleTypeCollection.getState("ArticleTypes");
 			Enumeration entries = entryList.elements();
-			while (entries.hasMoreElements() == true)
-			{
-				Color nextColor = (Color)entries.nextElement();
-				Vector<String> view = nextColor.getEntryListView();
+			while (entries.hasMoreElements() == true) {
+				ArticleType nextArticleType = (ArticleType)entries.nextElement();
+				Vector<String> view = nextArticleType.getEntryListView();
 
 				// add this list entry to the list
-				ColorTableModel nextTableRowData = new ColorTableModel(view);
+				ArticleTypeTableModel nextTableRowData = new ArticleTypeTableModel(view);
 				tableData.add(nextTableRowData);
 				
 			}
 			
-			tableOfColors.setItems(tableData);
+			tableOfArticleTypes.setItems(tableData);
 		}
 		catch (Exception e) {//SQLException e) {
 			// Need to handle this exception
@@ -111,8 +110,7 @@ public class ColorCollectionView extends View
 
 	// Create the title container
 	//-------------------------------------------------------------
-	private Node createTitle()
-	{
+	private Node createTitle() {
 		HBox container = new HBox();
 		container.setAlignment(Pos.CENTER);	
 
@@ -128,8 +126,7 @@ public class ColorCollectionView extends View
 
 	// Create the main form content
 	//-------------------------------------------------------------
-	private VBox createFormContent()
-	{
+	private VBox createFormContent() {
 		VBox vbox = new VBox(10);
 
 		GridPane grid = new GridPane();
@@ -138,46 +135,105 @@ public class ColorCollectionView extends View
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         
-        Text prompt = new Text("LIST OF COLORS");
-        prompt.setWrappingWidth(350);
+        Text prompt = new Text("Article Type INFORMATION");
+        prompt.setWrappingWidth(400);
         prompt.setTextAlignment(TextAlignment.CENTER);
-        prompt.setFill(javafx.scene.paint.Color.BLACK);
+        prompt.setFill(Color.BLACK);
         grid.add(prompt, 0, 0, 2, 1);
 
-		tableOfColors = new TableView<ColorTableModel>();
-		tableOfColors.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        Text barcodeLabel = new Text(" Barcode Prefix : ");
+        Font myFont = Font.font("Helvetica", FontWeight.BOLD, 12);
+        barcodeLabel.setFont(myFont);
+        barcodeLabel.setWrappingWidth(150);
+        barcodeLabel.setTextAlignment(TextAlignment.RIGHT);
+        grid.add(barcodeLabel, 0, 1);
+
+        barcodePrefix = new TextField();
+        barcodePrefix.setEditable(true);
+        grid.add(barcodePrefix, 1, 1);
+
+        Text aplhaCodeLabel = new Text(" Alpha Code Label : ");
+        aplhaCodeLabel.setFont(myFont);
+        aplhaCodeLabel.setWrappingWidth(150);
+        aplhaCodeLabel.setTextAlignment(TextAlignment.RIGHT);
+        grid.add(aplhaCodeLabel, 0, 2);
+
+        alphaCode = new TextField();
+        alphaCode.setEditable(true);
+        grid.add(alphaCode, 1, 2);
+
+        Text descriptionLabel = new Text(" Description: ");
+        descriptionLabel.setFont(myFont);
+        descriptionLabel.setWrappingWidth(150);
+        descriptionLabel.setTextAlignment(TextAlignment.RIGHT);
+        grid.add(descriptionLabel, 0, 3);
+
+        description = new TextField();
+        description.setEditable(true);
+        grid.add(description, 1, 3);
+
+        Text statusLabel = new Text(" Status : ");
+        statusLabel.setFont(myFont);
+        statusLabel.setWrappingWidth(150);
+        statusLabel.setTextAlignment(TextAlignment.RIGHT);
+        grid.add(statusLabel, 0, 4);
+
+        status = new TextField();
+        status.setEditable(true);
+        status.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                clearErrorMessage();
+                myModel.stateChangeRequest("ServiceCharge", status.getText());
+            }
+        });
+        grid.add(status, 1, 4);
+
+		tableOfArticleTypes = new TableView<ArticleTypeTableModel>();
+		tableOfArticleTypes.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+		TableColumn idColumn = new TableColumn("ID") ;
+		idColumn.setMinWidth(100);
+		idColumn.setCellValueFactory(
+	                new PropertyValueFactory<ArticleTypeTableModel, String>("id"));
 
 		TableColumn descriptionColumn = new TableColumn("Description") ;
 		descriptionColumn.setMinWidth(100);
 		descriptionColumn.setCellValueFactory(
-	                new PropertyValueFactory<ColorTableModel, String>("description"));
+	                new PropertyValueFactory<ArticleTypeTableModel, String>("description"));
+
+		TableColumn barcodePrefixColumn = new TableColumn("Barcode Prefix") ;
+		barcodePrefixColumn.setMinWidth(150);
+		barcodePrefixColumn.setCellValueFactory(
+					new PropertyValueFactory<ArticleTypeTableModel, String>("barcodePrefix"));
 	
 		TableColumn alphaCodeColumn = new TableColumn("Alpha Code") ;
 		alphaCodeColumn.setMinWidth(100);
 		alphaCodeColumn.setCellValueFactory(
-	                new PropertyValueFactory<ColorTableModel, String>("alphaCode"));
+	                new PropertyValueFactory<ArticleTypeTableModel, String>("alphaCode"));
 
-		tableOfColors.getColumns().addAll(descriptionColumn, alphaCodeColumn);
+		tableOfArticleTypes.getColumns().addAll(idColumn, descriptionColumn, barcodePrefixColumn, alphaCodeColumn);
 
-		// tableOfColors.setOnMousePressed(new EventHandler<MouseEvent>() {
-		// 	@Override
-		// 	public void handle(MouseEvent event)
-		// 	{
-		// 		if (event.isPrimaryButtonDown() && event.getClickCount() >=2 ){
-		// 			processColorSelected();
-		// 		}
-		// 	}
-		// });
+		tableOfArticleTypes.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.isPrimaryButtonDown() && event.getClickCount() >=2 ) {
+					processColorSelected();
+				}
+			}
+		});
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setPrefSize(115, 150);
-		scrollPane.setContent(tableOfColors);
+		scrollPane.setContent(tableOfArticleTypes);
 
 		submitButton = new Button("Submit");
  		submitButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				clearErrorMessage(); 
-				processColorSelected();
+				Properties props = getInput();
+
+				myModel.stateChangeRequest("DoModifyArticleType", props);
 			}
 		});
 
@@ -214,24 +270,25 @@ public class ColorCollectionView extends View
 	
 
 	//--------------------------------------------------------------------------
-	public void updateState(String key, Object value)
-	{
+	public void updateState(String key, Object value) {
 	}
 
 	//--------------------------------------------------------------------------
 	protected void processColorSelected() {
-		ColorTableModel selectedItem = tableOfColors.getSelectionModel().getSelectedItem();
+		ArticleTypeTableModel selectedItem = tableOfArticleTypes.getSelectionModel().getSelectedItem();
 		if(selectedItem != null) {
-			String selectedColorId = selectedItem.getId();
 			Properties props = new Properties();
-			props.setProperty("id", selectedColorId);
+			props.setProperty("id", selectedItem.getId());
+			props.setProperty("description", selectedItem.getDescription());
+			props.setProperty("barcodePrefix", selectedItem.getBarcodePrefix());
+			props.setProperty("alphaCode", selectedItem.getAlphaCode());
+
 			myModel.stateChangeRequest("ColorSelected", props);
 		}
 	}
 
 	//--------------------------------------------------------------------------
-	protected MessageView createStatusLog(String initialMessage)
-	{
+	protected MessageView createStatusLog(String initialMessage) {
 		statusLog = new MessageView(initialMessage);
 
 		return statusLog;
@@ -254,6 +311,14 @@ public class ColorCollectionView extends View
 	public void clearErrorMessage()
 	{
 		statusLog.clearErrorMessage();
+	}
+
+	public Properties getInput() {
+		Properties props = new Properties();
+		props.setProperty("description", description.getText());
+		props.setProperty("barcodePrefix", barcodePrefix.getText());
+		props.setProperty("alphaCode", alphaCode.getText());
+		return props;
 	}
 	/*
 	//--------------------------------------------------------------------------

@@ -4,43 +4,43 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Vector;
 
-public class ColorCollection extends EntityBase {
+public class ArticleTypeCollection extends EntityBase {
     private static final String myTableName = "Color";
-    private Vector<Color> colorList;
-    public ColorCollection() {
+    private Vector<ArticleType> articleTypeList;
+    public ArticleTypeCollection() {
         super(myTableName);
-        colorList = new Vector<Color>();
+        articleTypeList = new Vector<ArticleType>();
     }
 
-    public void getColors() throws SQLException {
+    public void getArticleTypes() throws SQLException {
         String query = "SELECT * FROM " + myTableName;
         Vector<Properties> result = getSelectQueryResult(query);
         if (result != null) {
 			for (int i = 0; i < result.size(); i++) {
-				Properties nextColorData = result.elementAt(i);
-				Color color = new Color(nextColorData);
-				if (color != null) {
-					colorList.add(color);
+				Properties nextArticleTypeData = result.elementAt(i);
+				ArticleType articleType = new ArticleType(nextArticleTypeData);
+				if (articleType != null) {
+					articleTypeList.add(articleType);
 				}
 			}
 		}
     }
 
     public void display() {
-        if (colorList.size() == 0) {
-            System.out.println("No colors in collection");
+        if (articleTypeList.size() == 0) {
+            System.out.println("No ArticleType in collection");
         }
         else {
-            for (int i = 0; i < colorList.size(); i++) {
-                System.out.println(colorList.elementAt(i).toString());
+            for (int i = 0; i < articleTypeList.size(); i++) {
+                System.out.println(articleTypeList.elementAt(i).toString());
             }
         }
     }
 
     public Object getState(String key) {
-		if (key.equals("Colors"))
-			return colorList;
-		else if (key.equals("ColorCollection"))
+		if (key.equals("ArticleTypes"))
+			return articleTypeList;
+		else if (key.equals("ArticleTypeCollection"))
 			return this;
 		return null;
 	}

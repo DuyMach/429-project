@@ -16,22 +16,22 @@ import userinterface.ViewFactory;
 
 /** The class containing the ModifyColorTransaction for the ATM application */
 //==============================================================
-public class ModifyColorTransaction extends Transaction {
+public class ModifyArticleTypeTransaction extends Transaction {
 	private String transactionErrorMessage = "";
 
-	private ColorCollection colorCollection;
+	private ArticleTypeCollection colorCollection;
     private String id;
     private String description;
     private String barcodePrefix;
     private String alphaCode;
 
-	public ModifyColorTransaction() throws Exception {
+	public ModifyArticleTypeTransaction() throws Exception {
 		super();
 
         try {
-            ColorCollection colors = new ColorCollection();
-            colors.getColors();
-            colorCollection = (ColorCollection)colors.getState("ColorCollection");
+            ArticleTypeCollection articleTypes = new ArticleTypeCollection();
+            articleTypes.getArticleTypes();
+            colorCollection = (ArticleTypeCollection)articleTypes.getState("ColorCollection");
         }
         catch (Exception exc) {
             System.err.println(exc);
@@ -41,8 +41,8 @@ public class ModifyColorTransaction extends Transaction {
 	//----------------------------------------------------------
 	protected void setDependencies() {
 		dependencies = new Properties();
-		dependencies.setProperty("DoModifyColor", "TransactionError");
-		dependencies.setProperty("CancelModifyColor", "CancelTransaction");
+		dependencies.setProperty("DoModifyArticleType", "TransactionError");
+		dependencies.setProperty("CancelModifyArticleType", "CancelTransaction");
 		dependencies.setProperty("OK", "CancelTransaction");
 
 		myRegistry.setDependencies(dependencies);
@@ -103,13 +103,13 @@ public class ModifyColorTransaction extends Transaction {
 	 */
 	//------------------------------------------------------
 	protected Scene createView() {
-		Scene currentScene = myViews.get("ColorCollectionView");
+		Scene currentScene = myViews.get("ArticleTypeCollectionView");
 
 		if (currentScene == null) {
 			// create our new view
-			View newView = ViewFactory.createView("ColorCollectionView", this);
+			View newView = ViewFactory.createView("ArticleTypeCollectionView", this);
 			currentScene = new Scene(newView);
-			myViews.put("ColorCollectionView", currentScene);
+			myViews.put("ArticleTypeCollectionView", currentScene);
 
 			return currentScene;
 		}

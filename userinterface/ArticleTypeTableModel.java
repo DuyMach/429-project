@@ -5,28 +5,28 @@ import java.util.Vector;
 import javafx.beans.property.SimpleStringProperty;
 
 //==============================================================================
-public class ColorTableModel
-{
-    private final SimpleStringProperty id;
+public class ArticleTypeTableModel {
+    private String id;
     private final SimpleStringProperty description;
+    private final SimpleStringProperty barcodePrefix;
 	private final SimpleStringProperty alphaCode;
 
 	//----------------------------------------------------------------------------
-	public ColorTableModel(Vector<String> colorData)
-	{
-        id = new SimpleStringProperty(colorData.elementAt(0));
-		description =  new SimpleStringProperty(colorData.elementAt(1));
-		alphaCode =  new SimpleStringProperty(colorData.elementAt(2));
+	public ArticleTypeTableModel(Vector<String> articleTypeData) {
+        id = articleTypeData.elementAt(0);
+		description =  new SimpleStringProperty(articleTypeData.elementAt(1));
+        barcodePrefix = new SimpleStringProperty(articleTypeData.elementAt(2));
+		alphaCode =  new SimpleStringProperty(articleTypeData.elementAt(3));
 	}
 
     //----------------------------------------------------------------------------
 	public String getId() {
-        return id.get();
+        return id;
     }
 
 	//----------------------------------------------------------------------------
     public void setId(String id) {
-        description.set(id);
+        this.id = id;
     }
 
 	//----------------------------------------------------------------------------
@@ -37,6 +37,16 @@ public class ColorTableModel
 	//----------------------------------------------------------------------------
     public void setDescription(String id) {
         description.set(id);
+    }
+
+    //----------------------------------------------------------------------------
+	public String getBarcodePrefix() {
+        return barcodePrefix.get();
+    }
+
+	//----------------------------------------------------------------------------
+    public void setBarcodePrefix(String prefix) {
+        barcodePrefix.set(prefix);
     }
 
     //----------------------------------------------------------------------------

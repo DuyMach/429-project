@@ -93,7 +93,11 @@ public class Clerk implements IView, IModel
 	public void stateChangeRequest(String key, Object value) {
 		switch (key) {
             case "AddArticleType":
+				doTransaction(key);
+				break;
             case "ModifyArticleType":
+				doTransaction(key);
+				break;
             case "DeleteArticleType":
             case "AddColor":
             case "ModifyColor":

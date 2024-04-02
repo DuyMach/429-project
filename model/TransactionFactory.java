@@ -12,8 +12,8 @@ public class TransactionFactory {
             case "AddColor":
                 // retValue = new AddColorTransaction();
                 break;
-            case "ModifyColor":
-                retValue = new ModifyColorTransaction();
+            case "ModifyArticleType":
+                retValue = new ModifyArticleTypeTransaction();
                 break;
             case "DeleteColor":
                 // retValue = new DeleteColorTransaction();

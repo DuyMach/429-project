@@ -12,19 +12,19 @@ public class ArticleTypeCollection extends EntityBase {
         articleTypeList = new Vector<ArticleType>();
     }
 
-    public void getArticleTypes() throws SQLException {
-        String query = "SELECT * FROM " + myTableName;
-        Vector<Properties> result = getSelectQueryResult(query);
-        if (result != null) {
-			for (int i = 0; i < result.size(); i++) {
-				Properties nextArticleTypeData = result.elementAt(i);
-				ArticleType articleType = new ArticleType(nextArticleTypeData);
-				if (articleType != null) {
-					articleTypeList.add(articleType);
-				}
-			}
-		}
-    }
+    // public void getArticleTypes() throws SQLException {
+    //     String query = "SELECT * FROM " + myTableName;
+    //     Vector<Properties> result = getSelectQueryResult(query);
+    //     if (result != null) {
+	// 		for (int i = 0; i < result.size(); i++) {
+	// 			Properties nextArticleTypeData = result.elementAt(i);
+	// 			ArticleType articleType = new ArticleType(nextArticleTypeData);
+	// 			if (articleType != null) {
+	// 				articleTypeList.add(articleType);
+	// 			}
+	// 		}
+	// 	}
+    // }
 
     public void display() {
         if (articleTypeList.size() == 0) {
@@ -56,7 +56,7 @@ public class ArticleTypeCollection extends EntityBase {
 	}
 
     public void findArticleTypeDesc(String description) {
-        String query = "SELECT * FROM " + myTableName + " WHERE description LIKE '%" + description + "%'';";
+        String query = "SELECT * FROM " + myTableName + " WHERE description LIKE '%" + description + "%';";
 
         Vector allDataRetrieved = getSelectQueryResult(query);
 
@@ -105,7 +105,7 @@ public class ArticleTypeCollection extends EntityBase {
     }
 
     public void findArticleTypeAlphaCode(String alphaCode) {
-        String query = "SELECT * FROM " + myTableName + " WHERE (alphaCode = " + alphaCode + ")";
+        String query = "SELECT * FROM " + myTableName + " WHERE (alphaCode = '" + alphaCode + "')";
         
         Vector allDataRetrieved = getSelectQueryResult(query);
 
@@ -167,4 +167,10 @@ public class ArticleTypeCollection extends EntityBase {
         }
         return low;
     }
+
+    public void printArticleType() {
+		for (ArticleType at: articleTypeList) {
+			System.out.println(at);
+		}
+	}
 }

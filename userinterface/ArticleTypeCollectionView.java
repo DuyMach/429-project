@@ -208,6 +208,7 @@ public class ArticleTypeCollectionView extends View
 				Properties props = getInput();
 
 				myModel.stateChangeRequest("DoModifyArticleType", props);
+				getEntryTableModelValues();
 			}
 		});
 
@@ -289,8 +290,8 @@ public class ArticleTypeCollectionView extends View
 
 	public Properties getInput() {
 		Properties props = new Properties();
-		// props.setProperty("description", description.getText());
-		props.setProperty("alphaCode", alphaCode.getText());
+		props.setProperty("description", description.getText());
+		// props.setProperty("alphaCode", alphaCode.getText());
 		return props;
 	}
 	/*

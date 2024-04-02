@@ -30,7 +30,6 @@ public class ModifyArticleTypeTransaction extends Transaction {
 
         try {
             ArticleTypeCollection articleTypes = new ArticleTypeCollection();
-            articleTypes.getArticleTypes();
             articleTypeCollection = (ArticleTypeCollection)articleTypes.getState("ArticleTypeCollection");
         }
         catch (Exception exc) {
@@ -55,11 +54,11 @@ public class ModifyArticleTypeTransaction extends Transaction {
 	//----------------------------------------------------------
 	public void processTransaction(Properties props) {
 		// id = props.getProperty("id");
-        // description = props.getProperty("description");
+        description = props.getProperty("description");
         // barcodePrefix = props.getProperty("barcodePrefix");
         alphaCode = props.getProperty("alphaCode");
 		articleTypeCollection = new ArticleTypeCollection();
-		articleTypeCollection.findArticleTypeAlphaCode(alphaCode);
+		articleTypeCollection.findArticleTypeDesc(description);
 	}
 
 	//-----------------------------------------------------------
@@ -78,7 +77,7 @@ public class ModifyArticleTypeTransaction extends Transaction {
             case "AlphaCode":
                 return alphaCode;
             default:
-                System.err.println("ModifyColorTransaction: invalid key for getState: "+key);
+                System.err.println("ModifyArticleTypeTransaction: invalid key for getState: " + key);
                 break;
 		}
 		return null;

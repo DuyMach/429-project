@@ -14,15 +14,15 @@ import exception.InvalidPrimaryKeyException;
 import userinterface.View;
 import userinterface.ViewFactory;
 
-/** The class containing the ModifyColorTransaction for the ATM application */
+/** The class containing the DeleteColorTransaction for the ATM application */
 //==============================================================
-public class ModifyColorTransaction extends Transaction {
+public class DeleteColorTransaction extends Transaction {
 	private String transactionStatusMessage = "";
 
 	private ColorCollection colorCollection;
     private Color selectedColor;
 
-	public ModifyColorTransaction() throws Exception {
+	public DeleteColorTransaction() throws Exception {
 		super();
 
         try {
@@ -38,7 +38,7 @@ public class ModifyColorTransaction extends Transaction {
 	//----------------------------------------------------------
 	protected void setDependencies() {
 		dependencies = new Properties();
-        dependencies.setProperty("DoModifyColor", "TransactionStatus");
+        dependencies.setProperty("DoDeleteColor", "TransactionStatus");
 		dependencies.setProperty("CancelColorCollection", "CancelTransaction");
 
 		myRegistry.setDependencies(dependencies);
@@ -49,8 +49,8 @@ public class ModifyColorTransaction extends Transaction {
 	 * verifying ownership, crediting, etc. etc.
 	 */
 	//----------------------------------------------------------
-	public void processTransaction(Properties props) {
-        selectedColor.modify(props);
+	public void processTransaction() {
+        selectedColor.delete();
         selectedColor.update();
         transactionStatusMessage = (String)selectedColor.getState("UpdateStatusMessage");
         try {
@@ -76,7 +76,7 @@ public class ModifyColorTransaction extends Transaction {
             case "alphaCode":
                 return selectedColor.getState(key);
             default:
-                System.err.println("ModifyColorTransaction: invalid key for getState: "+key);
+                System.err.println("DeleteColorTransaction: invalid key for getState: "+key);
                 break;
 		}
 		return null;
@@ -88,14 +88,14 @@ public class ModifyColorTransaction extends Transaction {
             case "DoYourJob":
                 doYourJob();
                 break;
-            case "DoModifyColor":   // called from ModifyColorView on submit
-                processTransaction((Properties)value);
+            case "DoDeleteColor":   // called from DeleteColorView on submit
+                processTransaction();
                 break;
             case "ColorSelected":
 				selectedColor = new Color((Properties)value);
-				createAndShowModifyColorView();
+				createAndShowDeleteColorView();
 				break;
-            case "CancelModifyColor":
+            case "CancelDeleteColor":
                 swapToView(createView());
                 break;
         }
@@ -110,22 +110,10 @@ public class ModifyColorTransaction extends Transaction {
         return currentScene;
 	}
 
-    protected void createAndShowModifyColorView() {
-        View newView = ViewFactory.createView("ModifyColorView", this);
+    protected void createAndShowDeleteColorView() {
+        View newView = ViewFactory.createView("DeleteColorView", this);
         Scene currentScene = new Scene(newView);
-        myViews.put("ModifyColorView", currentScene);
+        myViews.put("DeleteColorView", currentScene);
 		swapToView(currentScene);
     }
-
-	//------------------------------------------------------
-	protected  void createAndShowReceiptView() {
-		// create our new view
-		View newView = ViewFactory.createView("ModifyColorReceipt", this);
-		Scene newScene = new Scene(newView);
-
-		myViews.put("ModifyColorReceiptView", newScene);
-
-		// make the view visible by installing it into the frame
-		swapToView(newScene);
-	}
 }

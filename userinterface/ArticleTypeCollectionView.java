@@ -192,7 +192,7 @@ public class ArticleTypeCollectionView extends View
 			@Override
 			public void handle(MouseEvent event) {
 				if (event.isPrimaryButtonDown() && event.getClickCount() >=2 ) {
-					processColorSelected();
+					processArticleTypeSelected();
 				}
 			}
 		});
@@ -249,7 +249,7 @@ public class ArticleTypeCollectionView extends View
 	}
 
 	//--------------------------------------------------------------------------
-	protected void processColorSelected() {
+	protected void processArticleTypeSelected() {
 		ArticleTypeTableModel selectedItem = tableOfArticleTypes.getSelectionModel().getSelectedItem();
 		if(selectedItem != null) {
 			Properties props = new Properties();
@@ -258,7 +258,7 @@ public class ArticleTypeCollectionView extends View
 			props.setProperty("barcodePrefix", selectedItem.getBarcodePrefix());
 			props.setProperty("alphaCode", selectedItem.getAlphaCode());
 
-			myModel.stateChangeRequest("ColorSelected", props);
+			myModel.stateChangeRequest("ArticleTypeSelected", props);
 		}
 	}
 

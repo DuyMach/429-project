@@ -11,6 +11,8 @@ public class ViewFactory {
 				return new ClerkView(model);
 			case "ArticleTypeCollectionView":
 				return new ArticleTypeCollectionView(model);
+			case "ModifyArticleTypeView":
+				return new ModifyArticleTypeView(model);
 			default:
 				return null;
 		}

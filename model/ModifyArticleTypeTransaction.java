@@ -24,6 +24,7 @@ public class ModifyArticleTypeTransaction extends Transaction {
     private String description;
     private String barcodePrefix;
     private String alphaCode;
+	private ArticleType articleTypeSelected;
 
 	public ModifyArticleTypeTransaction() throws Exception {
 		super();
@@ -98,6 +99,10 @@ public class ModifyArticleTypeTransaction extends Transaction {
             case "DoModifyArticleType":   // gets called from ModifyColorTransactionView
                 processTransaction((Properties)value);
                 break;
+			case "ArticleTypeSelected":
+				articleTypeSelected = new ArticleType((Properties)value);
+				createAndShowModifyArticleTypeView();
+				break;
             default:
                 System.err.println("ModifyArticleTypeTransaction: invalid key for stateChangeRequest" + key);
         }
@@ -126,7 +131,7 @@ public class ModifyArticleTypeTransaction extends Transaction {
 	}
 
 	//------------------------------------------------------
-	protected  void createAndShowReceiptView() {
+	protected void createAndShowReceiptView() {
 		// create our new view
 		View newView = ViewFactory.createView("ModifyColorReceipt", this);
 		Scene newScene = new Scene(newView);
@@ -136,4 +141,11 @@ public class ModifyArticleTypeTransaction extends Transaction {
 		// make the view visible by installing it into the frame
 		swapToView(newScene);
 	}
+
+	protected void createAndShowModifyArticleTypeView() {
+        View newView = ViewFactory.createView("ModifyArticleTypeView", this);
+        Scene currentScene = new Scene(newView);
+        myViews.put("ModifyArticleTypeView", currentScene);
+		swapToView(currentScene);
+    }
 }

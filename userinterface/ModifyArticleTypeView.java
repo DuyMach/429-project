@@ -181,7 +181,7 @@ public class ModifyArticleTypeView extends View {
         props.setProperty("barcodePrefix", barcodePrefix.getText());
         props.setProperty("alphaCode", alphaCode.getText());
 
-        myModel.stateChangeRequest("DoModifyColor", props);
+        myModel.stateChangeRequest("Modify", props);
     }
 
 

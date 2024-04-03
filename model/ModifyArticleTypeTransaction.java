@@ -20,10 +20,7 @@ public class ModifyArticleTypeTransaction extends Transaction {
 	private String transactionErrorMessage = "";
 
 	private ArticleTypeCollection articleTypeCollection;
-    private String id;
-    private String description;
-    private String barcodePrefix;
-    private String alphaCode;
+    
 	private ArticleType articleTypeSelected;
 
 	public ModifyArticleTypeTransaction() throws Exception {
@@ -54,8 +51,8 @@ public class ModifyArticleTypeTransaction extends Transaction {
 	 */
 	//----------------------------------------------------------
 	public void processTransaction(Properties props) {
-        description = props.getProperty("description");
-        alphaCode = props.getProperty("alphaCode");
+        String description = props.getProperty("description");
+        String alphaCode = props.getProperty("alphaCode");
 		articleTypeCollection = new ArticleTypeCollection();
 
 		if (!(alphaCode == null)) {
@@ -76,13 +73,21 @@ public class ModifyArticleTypeTransaction extends Transaction {
             case "ArticleTypeCollection":
                 return articleTypeCollection;
             case "Id":
-                return id;
-            case "Description":
-                return description;
-            case "BarcodePrefix":
-                return barcodePrefix;
-            case "AlphaCode":
-                return alphaCode;
+				if (articleTypeSelected != null)
+                	return articleTypeSelected.getState("Id");
+				else return null;
+            case "description":
+				if (articleTypeSelected != null)
+					return articleTypeSelected.getState("description");
+				else return null;
+            case "barcodePrefix":
+				if (articleTypeSelected != null)
+					return articleTypeSelected.getState("barcodePrefix");
+				else return null;
+            case "alphaCode":
+				if (articleTypeSelected != null)
+					return articleTypeSelected.getState("alphaCode");
+				else return null;
             default:
                 System.err.println("ModifyArticleTypeTransaction: invalid key for getState: " + key);
                 break;
@@ -103,8 +108,13 @@ public class ModifyArticleTypeTransaction extends Transaction {
 				articleTypeSelected = new ArticleType((Properties)value);
 				createAndShowModifyArticleTypeView();
 				break;
+			case "Modify":
+				modify((Properties)value);
+				stateChangeRequest("DoModifyArticleType", value); //Don't question my authoritah
+				createAndShowArticleTypeCollectionView();
+
             default:
-                System.err.println("ModifyArticleTypeTransaction: invalid key for stateChangeRequest" + key);
+                System.err.println("ModifyArticleTypeTransaction: invalid key for stateChangeRequest " + key);
         }
 		myRegistry.updateSubscribers(key, this);
 	}
@@ -130,6 +140,13 @@ public class ModifyArticleTypeTransaction extends Transaction {
 		}
 	}
 
+	public void createAndShowArticleTypeCollectionView() {
+		View newView = ViewFactory.createView("ArticleTypeCollectionView", this);
+        Scene currentScene = new Scene(newView);
+        myViews.put("ArticleTypeCollectionView", currentScene);
+		swapToView(currentScene);
+	}
+
 	//------------------------------------------------------
 	protected void createAndShowReceiptView() {
 		// create our new view
@@ -148,4 +165,9 @@ public class ModifyArticleTypeTransaction extends Transaction {
         myViews.put("ModifyArticleTypeView", currentScene);
 		swapToView(currentScene);
     }
+
+	protected void modify(Properties prop) {
+		articleTypeSelected.modify(prop);
+		articleTypeSelected.save();
+	}
 }

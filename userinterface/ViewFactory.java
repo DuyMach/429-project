@@ -16,7 +16,7 @@ public class ViewFactory {
 			case "DeleteColorView":
 				return new DeleteColorView(model);
 			case "AddInventoryItemView":
-				return new AddInventoryItemView(model);
+				//return new AddInventoryItemView(model);
 			case "SearchArticleTypeView":
 				return new SearchArticleTypeView(model);
 			case "DeleteArticleTypeView":

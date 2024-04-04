@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -23,7 +24,8 @@ public class ArticleTypeView extends View{
     private TextField description;
     private TextField barcodePrefix;
     private TextField alphaCode;
-    private TextField status;
+    protected ComboBox<String> status = new ComboBox<>();
+    private String[] activity = {"Active", "Inactive"};
     private Button cancelButton;
     private Button doneButton;
     private MessageView statusLog;
@@ -51,7 +53,7 @@ public class ArticleTypeView extends View{
         description.setText((String)myModel.getState("description"));
         barcodePrefix.setText((String)myModel.getState("barcodePrefix"));
         alphaCode.setText((String)myModel.getState("alphaCode"));
-        status.setText((String)myModel.getState("Status"));
+        // status.setText((String)myModel.getState("Status"));
     }
 
     private MessageView createStatusLog(String initialMessage) {
@@ -110,15 +112,8 @@ public class ArticleTypeView extends View{
         statusLabel.setTextAlignment(TextAlignment.RIGHT);
         grid.add(statusLabel, 0, 4);
 
-        status = new TextField();
-        status.setEditable(true);
-        status.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                clearErrorMessage();
-                myModel.stateChangeRequest("ServiceCharge", status.getText());
-            }
-        });
+        status.getItems().addAll(activity);
+        status.getSelectionModel().selectFirst();
         grid.add(status, 1, 4);
 
         HBox doneCont = new HBox(10);
@@ -140,14 +135,20 @@ public class ArticleTypeView extends View{
             @Override
             public void handle(ActionEvent event) {
                 clearErrorMessage();
-                Properties prop = getInput();
-                myModel.stateChangeRequest("DoAddArticleType", prop);
+                if (validate()) {
+                    Properties prop = getInput();
+                    myModel.stateChangeRequest("DoAddArticleType", prop);
+                    statusLog.displayMessage("Successfully added ArticleType!");
+                }
             }
         });
         doneCont.getChildren().add(doneButton);
 
+        statusLog = new MessageView("");
+
         vbox.getChildren().add(grid);
         vbox.getChildren().add(doneCont);
+        vbox.getChildren().add(statusLog);
 
         return vbox;
     }
@@ -157,7 +158,7 @@ public class ArticleTypeView extends View{
         String barcodePrefixString = barcodePrefix.getText();
         String descString = description.getText();
         String alphaCodeString = alphaCode.getText();
-        String statusString = status.getText();
+        String statusString = status.getValue();
 
         prop.setProperty("barcodePrefix", barcodePrefixString);
         prop.setProperty("description", descString);
@@ -165,6 +166,28 @@ public class ArticleTypeView extends View{
         prop.setProperty("status", statusString);
 
         return prop;
+    }
+
+    private boolean validate(){
+        try {
+            String barcodePrefixString = barcodePrefix.getText();
+            String descString = description.getText();
+            String alphaCodeString = alphaCode.getText();
+
+            if (barcodePrefixString == null || descString == null || alphaCodeString == null){
+                statusLog.displayErrorMessage("Cannot have any empty fields!");
+                return false;
+            }
+
+            if (barcodePrefixString.length() != 2 || alphaCodeString.length() != 2){
+                statusLog.displayErrorMessage("BarcodePrefix and Alpha Code must be exactly 2 characters!");
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     private void clearErrorMessage() {

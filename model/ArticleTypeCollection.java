@@ -56,7 +56,7 @@ public class ArticleTypeCollection extends EntityBase {
 	}
 
     public void findArticleTypeDesc(String description) {
-        String query = "SELECT * FROM " + myTableName + " WHERE description LIKE '%" + description + "%';";
+        String query = "SELECT * FROM " + myTableName + " WHERE description LIKE '%" + description + "%' AND status = '" + "Active" + "';";
 
         Vector allDataRetrieved = getSelectQueryResult(query);
 
@@ -104,8 +104,38 @@ public class ArticleTypeCollection extends EntityBase {
 
     }
 
+    public void findArticleTypeBoth(String alphaCode, String description){
+    
+        String query = "SELECT * FROM " + myTableName + 
+            " WHERE alphaCode = '" + alphaCode + "' OR description LIKE '%" + description + "%' AND status = '" + "Active" + "';";
+        
+        Vector allDataRetrieved = getSelectQueryResult(query);
+
+        if (allDataRetrieved != null)
+        {
+            //articleTypeList = new Vector<ArticleType>();
+
+            for (int cnt = 0; cnt < allDataRetrieved.size(); cnt++)
+            {
+                Properties nextArticleTypeData = (Properties)allDataRetrieved.elementAt(cnt);
+
+                ArticleType articleType = new ArticleType(nextArticleTypeData);
+
+                if (articleType != null)
+                {
+                    addArticleType(articleType);
+                }
+            }
+
+        }    
+     
+    
+    }
+
     public void findArticleTypeAlphaCode(String alphaCode) {
-        String query = "SELECT * FROM " + myTableName + " WHERE (alphaCode = '" + alphaCode + "')";
+        String query = "SELECT * FROM " + myTableName + 
+            " WHERE alphaCode = '" + alphaCode + 
+            "' AND status = '" + "Active" + "';";
         
         Vector allDataRetrieved = getSelectQueryResult(query);
 

@@ -63,6 +63,8 @@ public class ModifyArticleTypeTransaction extends Transaction {
 			description = null;
 		} else if (description == null && alphaCode == null){
 			articleTypeCollection.findArticleTypeDesc("");
+		} else {
+			articleTypeCollection.findArticleTypeBoth(alphaCode, description);
 		}
 		
 	}

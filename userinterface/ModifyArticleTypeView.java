@@ -111,6 +111,8 @@ public class ModifyArticleTypeView extends View {
        	grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
+
+		Font myFont = Font.font("Helvetica", FontWeight.BOLD, 12);
         
         Text prompt = new Text("Modify Color details:");
         prompt.setWrappingWidth(350);
@@ -118,13 +120,32 @@ public class ModifyArticleTypeView extends View {
         prompt.setFill(javafx.scene.paint.Color.BLACK);
         grid.add(prompt, 0, 0, 2, 1);
 
+		Text descriptionLabel = new Text(" Description: ");
+		descriptionLabel.setFont(myFont);
+        descriptionLabel.setWrappingWidth(150);
+        descriptionLabel.setTextAlignment(TextAlignment.RIGHT);
+
+		Text barcodePrefixLabel = new Text(" Barcode Prefix : ");
+        barcodePrefixLabel.setFont(myFont);
+        barcodePrefixLabel.setWrappingWidth(150);
+        barcodePrefixLabel.setTextAlignment(TextAlignment.RIGHT);
+
+		Text aplhaCodeLabel = new Text(" Alpha Code Label : ");
+        aplhaCodeLabel.setFont(myFont);
+        aplhaCodeLabel.setWrappingWidth(150);
+        aplhaCodeLabel.setTextAlignment(TextAlignment.RIGHT);
+
+		grid.add(barcodePrefixLabel, 0, 1);
+		grid.add(aplhaCodeLabel, 0, 2);
+		grid.add(descriptionLabel, 0, 3);
+
         description = new TextField();
         barcodePrefix = new TextField();
         alphaCode = new TextField();
 
-        grid.add(description, 0, 1);
-        grid.add(barcodePrefix, 0, 2);
-        grid.add(alphaCode, 0, 3);
+        grid.add(barcodePrefix, 1, 1);
+        grid.add(alphaCode, 1, 2);
+        grid.add(description, 1, 3);
 
 
         HBox btnContainer = new HBox(100);

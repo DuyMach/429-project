@@ -61,6 +61,8 @@ public class ModifyArticleTypeTransaction extends Transaction {
 		} else if (!(description == null)){
 			articleTypeCollection.findArticleTypeDesc(description);
 			description = null;
+		} else if (description == null && alphaCode == null){
+			articleTypeCollection.findArticleTypeDesc("");
 		}
 		
 	}
@@ -112,7 +114,6 @@ public class ModifyArticleTypeTransaction extends Transaction {
 				modify((Properties)value);
 				stateChangeRequest("DoModifyArticleType", value); //Don't question my authoritah
 				createAndShowArticleTypeCollectionView();
-
             default:
                 System.err.println("ModifyArticleTypeTransaction: invalid key for stateChangeRequest " + key);
         }

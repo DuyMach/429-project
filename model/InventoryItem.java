@@ -236,6 +236,7 @@ public class InventoryItem extends EntityBase implements IView {
     }//End updateStateInDatabase------------------------------
 
 
+
     /**==========================================================
      * updateState
      *
@@ -327,6 +328,18 @@ public class InventoryItem extends EntityBase implements IView {
 	public void delete() {
         persistentState.setProperty("status", "Removed");
     }//End delete----------------------------------------
+
+    public void removeItem() {
+				try {
+                    Integer code =
+                    deletePersistentState(mySchema, persistentState);
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            preexists = true;
+            updateStatusMessage = "Inventory data added successfully!";
+    }
 
 	/*modify--------------------------------------------
 	 * 

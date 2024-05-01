@@ -294,5 +294,42 @@ public class Color extends EntityBase {
                     + barcodePrefix + " found.");
         }
 	 }
+
+     public Color findColorByDesc(String desc) throws InvalidPrimaryKeyException{
+
+		String query = "SELECT * FROM " + myTableName + " WHERE description LIKE ('%" + desc + "%');";
+
+		Vector<Properties> allDataRetrieved = getSelectQueryResult(query);
+
+		// You must get one account at least
+        if (allDataRetrieved != null) {
+            int size = allDataRetrieved.size();
+
+            if (size == 0) {
+				throw new InvalidPrimaryKeyException("No Color matching desc : "
+				+ desc + " found.");
+			}
+
+			Properties retrievedColorData = allDataRetrieved.elementAt(0);
+            persistentState = new Properties();
+
+			Enumeration allKeys = retrievedColorData.propertyNames();
+                while (allKeys.hasMoreElements() == true) {
+                    String nextKey = (String) allKeys.nextElement();
+                    String nextValue = retrievedColorData.getProperty(nextKey);
+
+                    if (nextValue != null) {
+                        persistentState.setProperty(nextKey, nextValue);
+                    }
+                }
+			Color color = new Color(retrievedColorData);
+			return color;
+
+        }
+        else {
+            throw new InvalidPrimaryKeyException("No Color matching desc : "
+                    + desc + " found.");
+        }
+	 }
 }
 

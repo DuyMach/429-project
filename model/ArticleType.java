@@ -323,4 +323,39 @@ public class ArticleType extends EntityBase implements IView
                     + id + " found.");
         }
 	 }
+
+	 public ArticleType findArticleTypeByDesc(String desc) throws InvalidPrimaryKeyException{
+
+		String query = "SELECT * FROM " + myTableName + " WHERE description LIKE ('%" + desc + "%');";
+
+		Vector<Properties> allDataRetrieved = getSelectQueryResult(query);
+
+		// You must get one account at least
+        if (allDataRetrieved != null) {
+            int size = allDataRetrieved.size();
+			if (size == 0) {
+				throw new InvalidPrimaryKeyException("No ArticleType matching desc : "
+				+ desc + " found.");
+			}
+			Properties retrievedArticleTypeData = allDataRetrieved.elementAt(0);
+            persistentState = new Properties();
+
+			Enumeration allKeys = retrievedArticleTypeData.propertyNames();
+                while (allKeys.hasMoreElements() == true) {
+                    String nextKey = (String) allKeys.nextElement();
+                    String nextValue = retrievedArticleTypeData.getProperty(nextKey);
+                    // accountNumber = Integer.parseInt(retrievedAccountData.getProperty("accountNumber"));
+
+                    if (nextValue != null) {
+                        persistentState.setProperty(nextKey, nextValue);
+                    }
+                }
+				ArticleType articleType = new ArticleType(retrievedArticleTypeData);
+				return articleType;
+        }
+        else {
+            throw new InvalidPrimaryKeyException("No ArticleType matching desc : "
+                    + desc + " found.");
+        }
+	 }
 }

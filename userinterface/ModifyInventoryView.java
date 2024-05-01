@@ -32,7 +32,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 // project imports
@@ -44,9 +48,9 @@ public class ModifyInventoryView extends View {
     protected TextField gender;
     protected TextField size;
 
-    protected TextField articleTypeBarcodePF;
-    protected TextField color1BarcodePF;
-    protected TextField color2BarcodePF;
+    protected TextField articleTypeDesc;
+    protected TextField color1Desc;
+    protected TextField color2Desc;
 
     protected TextField brand;
     protected TextField notes;
@@ -56,12 +60,6 @@ public class ModifyInventoryView extends View {
     protected TextField donorPhone;
 
     protected TextField donorEmail;
-    protected TextField receiverNetid;
-    protected TextField receiverLastname;
-
-    protected TextField receiverFirstname;
-    protected TextField dateDonated;
-    protected TextField dateTaken;
 
 	protected Button cancelButton;
 	protected Button submitButton;
@@ -104,9 +102,9 @@ public class ModifyInventoryView extends View {
         gender.setText((String)myModel.getState("gender"));
         size.setText((String)myModel.getState("size"));
 
-        articleTypeBarcodePF.setText((String)(myModel.getState("articleTypeBarcodePF")));
-        color1BarcodePF.setText((String)myModel.getState("color1BarcodePF"));
-        color2BarcodePF.setText((String)myModel.getState("color2BarcodePF"));
+        articleTypeDesc.setText((String)(myModel.getState("articleTypeDesc")));
+        color1Desc.setText((String)myModel.getState("color1Desc"));
+        color2Desc.setText((String)myModel.getState("color2Desc"));
 
         brand.setText((String)(myModel.getState("brand")));
         notes.setText((String)myModel.getState("notes"));
@@ -116,13 +114,6 @@ public class ModifyInventoryView extends View {
         donorPhone.setText((String)myModel.getState("donorPhone"));
 
         donorEmail.setText((String)(myModel.getState("donorEmail")));
-        receiverNetid.setText((String)myModel.getState("receiverNetid"));
-        receiverLastname.setText((String)myModel.getState("receiverLastName"));
-
-        receiverFirstname.setText((String)(myModel.getState("receiverFirstName")));
-        dateDonated.setText((String)myModel.getState("dateDonated"));
-        dateTaken.setText((String)myModel.getState("dateTaken"));
-
 	}
 
 	// Create the title container
@@ -162,9 +153,9 @@ public class ModifyInventoryView extends View {
         Text genderLabel = styleTextLable("Gender");
 		Text sizeLabel = styleTextLable("Size");
 
-        Text articleTypeBarcodePFLabel = styleTextLable("Article Type Barcode Prefix");
-        Text color1BarcodePFLabel = styleTextLable("Color 1 Barcode Prefix");
-		Text color2BarcodePFLabel = styleTextLable("Color 2 Barcode Prefix");
+        Text articleTypeDescLabel = styleTextLable("Article Type");
+        Text color1DescLabel = styleTextLable("Color 1");
+		Text color2DescLabel = styleTextLable("Color 2");
 
         Text brandLabel = styleTextLable("Brand");
         Text notesLabel = styleTextLable("Notes");
@@ -174,21 +165,15 @@ public class ModifyInventoryView extends View {
 		Text donorPhoneLabel = styleTextLable("Donor Phone Number");
 
         Text donorEmailLabel = styleTextLable("Donor Email");
-        Text receiverNetidLabel = styleTextLable("Receiver Net Id");
-		Text receiverLastnameLabel = styleTextLable("Receiver Last Name");
-
-        Text receiverFirstnameLabel = styleTextLable("Donor First Name");
-        Text dateDonatedLabel = styleTextLable("Date Donated");
-		Text dateTakenLabel = styleTextLable("Date Taken");
         
 
 		grid.add(barcodeLabel, 0, 1);
 		grid.add(genderLabel, 0, 2);
 		grid.add(sizeLabel, 0, 3);
 
-        grid.add(articleTypeBarcodePFLabel, 0, 4);
-		grid.add(color1BarcodePFLabel, 0, 5);
-		grid.add(color2BarcodePFLabel, 0, 6);
+        grid.add(articleTypeDescLabel, 0, 4);
+		grid.add(color1DescLabel, 0, 5);
+		grid.add(color2DescLabel, 0, 6);
 
         grid.add(brandLabel, 0, 7);
 		grid.add(notesLabel, 0, 8);
@@ -198,47 +183,31 @@ public class ModifyInventoryView extends View {
 		grid.add(donorPhoneLabel, 0, 11);
 
         grid.add(donorEmailLabel, 0, 12);
-		grid.add(receiverNetidLabel, 0, 13);
-		grid.add(receiverFirstnameLabel, 0, 14);
 
-        grid.add(receiverLastnameLabel, 0, 15);
-		grid.add(dateDonatedLabel, 0, 16);
-		grid.add(dateTakenLabel, 0, 17);
+        barcodeText = new Text("");
+        gender = new TextField("");
+        size = new TextField("");
 
-        barcodeText = new Text();
-        gender = new TextField();
-        size = new TextField();
+        articleTypeDesc = new TextField("");
+        color1Desc = new TextField("");
+        color2Desc = new TextField("");
 
-        articleTypeBarcodePF = new TextField();
-        color1BarcodePF = new TextField();
-        color2BarcodePF = new TextField();
+        brand = new TextField("");
+        notes = new TextField("");
 
-        brand = new TextField();
-        notes = new TextField();
+        donorFirstname = new TextField("");
+        donorLastname = new TextField("");
+        donorPhone = new TextField("");
 
-        // articleTypeId = new TextField();
-        // color1Id = new TextField();
-        // color2Id = new TextField();
-
-        donorFirstname = new TextField();
-        donorLastname = new TextField();
-        donorPhone = new TextField();
-
-        donorEmail = new TextField();
-        receiverNetid = new TextField();
-        receiverFirstname = new TextField();
-
-        receiverLastname = new TextField();
-        dateDonated = new TextField();
-        dateTaken = new TextField();
+        donorEmail = new TextField("");
 
         grid.add(barcodeText, 1, 1);
         grid.add(gender, 1, 2);
         grid.add(size, 1, 3);
 
-        grid.add(articleTypeBarcodePF, 1, 4);
-        grid.add(color1BarcodePF, 1, 5);
-        grid.add(color2BarcodePF, 1, 6);
+        grid.add(articleTypeDesc, 1, 4);
+        grid.add(color1Desc, 1, 5);
+        grid.add(color2Desc, 1, 6);
 
         grid.add(brand, 1, 7);
         grid.add(notes, 1, 8);
@@ -248,12 +217,6 @@ public class ModifyInventoryView extends View {
         grid.add(donorPhone, 1, 11);
 
         grid.add(donorEmail, 1, 12);
-        grid.add(receiverNetid, 1, 13);
-        grid.add(receiverFirstname, 1, 14);
-
-        grid.add(receiverLastname, 1, 15);
-        grid.add(dateDonated, 1, 16);
-        grid.add(dateTaken, 1, 17);
 
 
         HBox btnContainer = new HBox(100);
@@ -265,7 +228,6 @@ public class ModifyInventoryView extends View {
 			public void handle(ActionEvent e) {
 				clearErrorMessage();
 				processSubmit();
-                statusLog.displayMessage((String) myModel.getState("TransactionStatus"));
 			}
 		});
         btnContainer.getChildren().add(submitButton);
@@ -276,12 +238,11 @@ public class ModifyInventoryView extends View {
        		     @Override
        		     public void handle(ActionEvent e) {
        		     	clearErrorMessage();
-       		     	myModel.stateChangeRequest("CancelModifyArticleType", null); 
+       		     	myModel.stateChangeRequest("CancelModifyInventoryItem", null); 
             	  }
         	});
 		btnContainer.getChildren().add(cancelButton);
 		
-
         ScrollPane sp = new ScrollPane(grid);
         sp.setMaxHeight(500);
         sp.setMaxWidth(vbox.getMaxWidth());
@@ -313,13 +274,10 @@ public class ModifyInventoryView extends View {
 		return statusLog;
 	}
 
-    protected void processSubmit() {
+    protected boolean processSubmit() {
         Properties props = new Properties();
         String genderString = "";
         String sizeString = "";
-        String articleTypeBarcodePFString = "";
-        String color1BarcodePFString = "";
-        String color2BarcodePFString = "";
         String brandString = "";
         String noteString = "";
         String donorFirstNameString = "";
@@ -333,53 +291,104 @@ public class ModifyInventoryView extends View {
         String dateTakenString = "";
 
 
-        if (articleTypeBarcodePF.getText().isEmpty()){
-            statusLog.displayErrorMessage("ArticleType Barcode Prefix cannot be empty");
-        } else if (color1BarcodePF.getText().isEmpty()) {
-            statusLog.displayErrorMessage("Color1 Barcode Prefix cannot be empty");
+
+        if ((size.getText().isEmpty())) {
+            statusLog.displayErrorMessage("Size cannot be empty");
+            return false;
         } else {
-            
-            try {
-                genderString = gender.getText();
-                sizeString = size.getText();
-                articleTypeBarcodePFString = articleTypeBarcodePF.getText();
-                color1BarcodePFString = color1BarcodePF.getText();
-                color2BarcodePFString = color2BarcodePF.getText();
-                brandString = brand.getText();
-                noteString = notes.getText();
-                donorFirstNameString = donorFirstname.getText();
-                donorLastNameString = donorLastname.getText();
-                donorPhoneString = donorPhone.getText();
-                donorEmailString = donorEmail.getText();
-                receiverNetidString = receiverNetid.getText();
-                receiverFirstNameString = receiverFirstname.getText();
-                receiverLastNameString = receiverLastname.getText();
-                dateDonatedString = dateDonated.getText();
-                dateTakenString = dateTaken.getText();
+            props.setProperty("size", size.getText());
+        }
 
+        if (!(gender.getText().isEmpty())) {
+            genderString = gender.getText();
+            if (genderString.toUpperCase().equals("M") || genderString.toUpperCase().equals("W")) {
                 props.setProperty("gender", genderString);
-                props.setProperty("size", sizeString);
-                props.setProperty("articleTypeBarcodePF", articleTypeBarcodePFString);
-                props.setProperty("color1BarcodePF", color1BarcodePFString);
-                props.setProperty("color2BarcodePF", color2BarcodePFString);
-                props.setProperty("brand", brandString);
-                props.setProperty("notes", noteString);
-                props.setProperty("donorFirstName", donorFirstNameString);
-                props.setProperty("donorLastName", donorLastNameString);
-                props.setProperty("donorPhone", donorPhoneString);
-                props.setProperty("donorEmail", donorEmailString);
-                props.setProperty("receiverNetId", receiverNetidString);
-                props.setProperty("receiverFirstName", receiverFirstNameString);
-                props.setProperty("receiverLastname", receiverLastNameString);
+            } else {
+                statusLog.displayErrorMessage("Gender can only be M or W (One letter)");
+                return false;
+            }
+        } else {
+            statusLog.displayErrorMessage("Gender cannot be empty");
+            return false;
+        }
 
-                myModel.stateChangeRequest("Modify", props);
-
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+        donorPhoneString = donorPhone.getText();
+        if (donorPhoneString != null) {
+            if (!donorPhoneString.isEmpty()) {
+                if (isValidPhoneNumber(donorPhoneString)) {
+                    props.setProperty("donorPhone", donorPhoneString);
+                } else {
+                    statusLog.displayErrorMessage("Phone number must follow XXX-XXXX");
+                    return false;
+                }
             }
         }
 
+        donorEmailString = donorEmail.getText();
+        if (donorEmailString != null) {
+            if (!donorEmailString.isEmpty()) {
+                if (isValidEmail(donorEmailString)) {
+                    props.setProperty("donorEmail", donorEmailString);
+                } else {
+                    statusLog.displayErrorMessage("Email must follow format: example@mail.com");
+                    return false;
+                }
+            }
+        }
+
+        brandString = brand.getText();
+        if (brandString != null) {
+            if (!brandString.isEmpty()) {
+                props.setProperty("brand", brandString);
+            }
+        }
+
+        noteString = notes.getText();
+        if (noteString != null) {
+            if (!noteString.isEmpty()) {
+                props.setProperty("notes", noteString);
+            }
+        }
+
+        donorFirstNameString = donorFirstname.getText();
+        if (donorFirstNameString != null) {
+            if (!donorFirstNameString.isEmpty()) {
+                props.setProperty("donorFirstName", donorFirstNameString);
+            }
+        }
+
+        donorLastNameString = donorLastname.getText();
+        if (donorLastNameString != null) {
+            if (!donorLastNameString.isEmpty()) {
+                props.setProperty("donorLastName", donorLastNameString);
+            }
+        }
+
+        statusLog.displayMessage("Success");
         myModel.stateChangeRequest("Modify", props);
+
+        return true;
+    }
+
+    private boolean isValidDate(String date){
+        String regex = "[0-9]{4}-[0-9]{2}-[0-9]{2}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher((CharSequence)date);
+        return matcher.matches();
+    }
+
+    private boolean isValidEmail(String email) {
+        String regex = "^[^@]+@[^@]+\\.[^@]{2,}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher((CharSequence)email);
+        return matcher.matches();
+    }
+
+    private boolean isValidPhoneNumber(String phone){
+        String regex = "[0-9]{3}-[0-9]{3}-[0-9]{4}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher((CharSequence)phone);
+        return matcher.matches();
     }
 
 

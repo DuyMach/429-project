@@ -378,7 +378,7 @@ public class ModifyInventoryView extends View {
     }
 
     private boolean isValidEmail(String email) {
-        String regex = "^[^@]+@[^@]+\\\\.[^@]{2,}$";
+        String regex = "^[^@]+@[^@]+\\.[^@]{2,}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher((CharSequence)email);
         return matcher.matches();

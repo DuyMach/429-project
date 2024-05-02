@@ -156,7 +156,7 @@ public class DeleteInventoryItemView extends View {
 
         HBox buttons = new HBox(10);
         buttons.setAlignment(Pos.CENTER);
-        Button cancelButton = new Button("Back");
+        Button cancelButton = new Button("No");
         cancelButton.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override

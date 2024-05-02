@@ -231,7 +231,7 @@ public class InventoryItem extends EntityBase implements IView {
 				updateStatusMessage = "Inventory data added successfully!";
 			}
         } catch (SQLException ex) {
-            updateStatusMessage = "Error: " + ex.getMessage();
+            updateStatusMessage = "Error: Item with barcode already exists!";
         }
     }//End updateStateInDatabase------------------------------
 

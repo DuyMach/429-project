@@ -114,7 +114,14 @@ public class CheckoutInventoryItemTransaction extends Transaction{
             articleType = new ArticleType();
             articleType.getArticleTypeById((String)item.getState("articleTypeId"));
             color1 = new Color((String)item.getState("color1Id"));
-            color2 = new Color((String)item.getState("color2Id"));
+
+            String color2IdString = (String)item.getState("color2Id");
+            if (color2IdString != null) {
+                color2 = new Color((String)item.getState("color2Id"));
+            } else {
+                // If color2Id is null (empty) then set to inactive color
+                color2 = new Color("22");
+            }
             transactionStatusMessage = "";
             createAndShowCheckoutInventoryItemView();
         }

@@ -100,7 +100,14 @@ public class CheckoutInventoryItemView extends View {
         gender.setText((String)(myModel.getState("gender")));
         articleType.setText((String)(myModel.getState("articleTypeDescription")));
         color1.setText((String)(myModel.getState("color1Description")));
-        color2.setText((String)(myModel.getState("color2Description")));
+
+		String color2DescString = (String) myModel.getState("color2Description");
+		if (color2DescString.equals("Inactive color")) {
+			color2.setText("You don't got no color 2, you colorless hoe"); // Subject to change
+		} else {
+			color2.setText((String)(myModel.getState("color2Description")));
+		}
+
         size.setText((String)(myModel.getState("size")));
         brand.setText((String)(myModel.getState("brand")));
         notes.setText((String)(myModel.getState("notes")));

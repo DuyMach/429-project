@@ -204,9 +204,7 @@ public class ArticleTypeCollectionView extends View
 				}
 			}
 		});
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setPrefSize(372, 150);
-		scrollPane.setContent(tableOfArticleTypes);
+		tableOfArticleTypes.setPrefSize(370, 150);
 
 		HBox buttons = new HBox(10);
         buttons.setAlignment(Pos.CENTER);
@@ -245,8 +243,9 @@ public class ArticleTypeCollectionView extends View
 		buttons.getChildren().add(submitButton);
 		
 		vbox.getChildren().add(grid);
-		vbox.getChildren().add(scrollPane);
+		vbox.getChildren().add(tableOfArticleTypes);
 		vbox.getChildren().add(buttons);
+		vbox.setAlignment(Pos.CENTER);
 	
 		return vbox;
 	}

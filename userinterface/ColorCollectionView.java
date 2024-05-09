@@ -27,6 +27,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -170,9 +171,7 @@ public class ColorCollectionView extends View
 				}
 			}
 		});
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setMaxSize(372, 150);
-		scrollPane.setContent(tableOfColors);
+		tableOfColors.setMaxSize(370, 150);
 
 		HBox buttons = new HBox(10);
         buttons.setAlignment(Pos.CENTER);
@@ -180,8 +179,8 @@ public class ColorCollectionView extends View
         cancelButton.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
 
-				@Override
-				public void handle(ActionEvent e) {
+			@Override
+			public void handle(ActionEvent e) {
 				/**
 				 * Process the Cancel button.
 				 * The ultimate result of this action is that the transaction will tell the teller to
@@ -192,7 +191,7 @@ public class ColorCollectionView extends View
 				//----------------------------------------------------------
 				clearErrorMessage();
 				myModel.stateChangeRequest("CancelColorCollection", null); 
-				}
+			}
 		});
 		buttons.getChildren().add(cancelButton);
 
@@ -208,8 +207,9 @@ public class ColorCollectionView extends View
 		buttons.getChildren().add(submitButton);
 		
 		vbox.getChildren().add(grid);
-		vbox.getChildren().add(scrollPane);
+		vbox.getChildren().add(tableOfColors);
 		vbox.getChildren().add(buttons);
+		vbox.setAlignment(Pos.CENTER);
 	
 		return vbox;
 	}

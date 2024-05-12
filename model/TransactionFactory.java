@@ -46,6 +46,9 @@ public class TransactionFactory {
             case "CheckoutInventory":
                 retValue = new CheckoutInventoryItemTransaction();
                 break;
+            case "ListAvailableInventory":
+                retValue = new ListAvailableInventoryTransaction();
+                break;
             default:
                 System.err.println("Invalid transaction type");
         }

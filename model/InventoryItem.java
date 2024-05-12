@@ -289,26 +289,24 @@ public class InventoryItem extends EntityBase implements IView {
      * @return v vector of obejct properties
      */
     public Vector<String> getEntryListView() {
-        Vector<String> v = new Vector();
+        Vector<String> v = new Vector<String>();
 
         v.addElement(persistentState.getProperty("barcode"));
-        v.addElement(persistentState.getProperty("gender"));
-        v.addElement(persistentState.getProperty("size"));
-        v.addElement(persistentState.getProperty("articleTypeId"));
-        v.addElement(persistentState.getProperty("color1Id"));
-        v.addElement(persistentState.getProperty("color2Id"));
-        v.addElement(persistentState.getProperty("brand"));
-        v.addElement(persistentState.getProperty("notes"));
-        v.addElement(persistentState.getProperty("donorLastName"));
-        v.addElement(persistentState.getProperty("donorFirstName"));
-        v.addElement(persistentState.getProperty("donorPhone"));
-        v.addElement(persistentState.getProperty("donorEmail"));
-        v.addElement(persistentState.getProperty("receiverNetid"));
-		v.addElement(persistentState.getProperty("receiverLastname"));
-		v.addElement(persistentState.getProperty("receiverFirstname"));
-		v.addElement(persistentState.getProperty("dateDonated"));
-		v.addElement(persistentState.getProperty("dateTaken"));
 
+        try
+        {
+            ArticleType temp1 = new ArticleType(persistentState.getProperty("articleTypeId"));
+            v.addElement((String)temp1.getState("description"));
+            model.Color temp2 = new model.Color(persistentState.getProperty("color1Id"));
+            v.addElement((String)temp2.getState("description"));
+        }
+        catch (Exception ex)
+        {
+            // This should never happen.
+        }
+
+        v.addElement(persistentState.getProperty("gender"));
+		v.addElement(persistentState.getProperty("dateDonated"));
 
         return v;
     }//End getEntryListView-----------------------------------

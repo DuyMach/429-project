@@ -36,6 +36,8 @@ public class ViewFactory {
 				return new DeleteInventoryItemView(model);
 			case "CheckoutInventoryItemView":
 				return new CheckoutInventoryItemView(model);
+			case "ListAvailableInventoryView":
+				return new ListAvailableInventoryView(model);
 			default:
 				return null;
 		}

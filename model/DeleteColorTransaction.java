@@ -51,7 +51,6 @@ public class DeleteColorTransaction extends Transaction {
 	//----------------------------------------------------------
 	public void processTransaction() {
         selectedColor.delete();
-        selectedColor.update();
         transactionStatusMessage = (String)selectedColor.getState("UpdateStatusMessage");
         try {
             colorCollection.getColors();

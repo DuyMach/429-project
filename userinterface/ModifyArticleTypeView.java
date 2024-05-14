@@ -82,11 +82,11 @@ public class ModifyArticleTypeView extends View {
 	//--------------------------------------------------------------------------
 	protected void populateFields()
 	{
-		getColorData();
+		getArticleTypeData();
 	}
 
 	//--------------------------------------------------------------------------
-	protected void getColorData() {
+	protected void getArticleTypeData() {
 		description.setText((String)(myModel.getState("description")));
         barcodePrefix.setText((String)myModel.getState("barcodePrefix"));
         alphaCode.setText((String)myModel.getState("alphaCode"));
@@ -190,11 +190,17 @@ public class ModifyArticleTypeView extends View {
 
 	//--------------------------------------------------------------------------
 	public void updateState(String key, Object value) {
-        switch (key) {
-            case "TransactionStatus":
-                displayMessage((String)value);
-		}
-	}
+        clearErrorMessage();
+
+        if (key.equals("TransactionStatus")) {
+            String val = (String) value;
+            if ((val.startsWith("ERR")) || (val.startsWith("Err"))) {
+                displayErrorMessage(val);
+            } else {
+                displayMessage(val);
+            }
+        }
+    }
 
 	//--------------------------------------------------------------------------
 	protected MessageView createStatusLog(String initialMessage)
@@ -210,7 +216,7 @@ public class ModifyArticleTypeView extends View {
         props.setProperty("barcodePrefix", barcodePrefix.getText());
         props.setProperty("alphaCode", alphaCode.getText());
 
-        myModel.stateChangeRequest("Modify", props);
+        myModel.stateChangeRequest("DoModifyArticleType", props);
     }
 
 
@@ -222,6 +228,11 @@ public class ModifyArticleTypeView extends View {
 	{
 		statusLog.displayMessage(message);
 	}
+	
+	public void displayErrorMessage(String message)
+    {
+        statusLog.displayErrorMessage(message);
+    }
 
 	/**
 	 * Clear error message

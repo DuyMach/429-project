@@ -14,16 +14,16 @@ import exception.InvalidPrimaryKeyException;
 import userinterface.View;
 import userinterface.ViewFactory;
 
-/** The class containing the ModifyColorTransaction for the ATM application */
+/** The class containing the ModifyArticleTypeTransaction for the ATM application */
 //==============================================================
 public class ModifyArticleTypeTransaction extends Transaction {
-	private String transactionErrorMessage = "";
+	private String transactionStatusMessage = "";
 
 	private ArticleTypeCollection articleTypeCollection;
-	private ArticleType articleTypeSelected;
+	private ArticleType selectedArticleType;
 	private String description;
-    private String barcodePrefix;
     private String alphaCode;    
+
 
 	public ModifyArticleTypeTransaction() throws Exception {
 		super();
@@ -40,61 +40,48 @@ public class ModifyArticleTypeTransaction extends Transaction {
 	//----------------------------------------------------------
 	protected void setDependencies() {
 		dependencies = new Properties();
-		dependencies.setProperty("DoModifyArticleType", "TransactionError");
-		dependencies.setProperty("CancelModifyArticleType", "CancelTransaction");
+		dependencies.setProperty("DoModifyArticleType", "TransactionStatus");
+		dependencies.setProperty("CancelModifyArticleType", "ArticleTypeCollection");
+		dependencies.setProperty("CancelArticleTypeCollection", "CancelTransaction");
 
 		myRegistry.setDependencies(dependencies);
 	}
 
-	/**
-	 * This method encapsulates all the logic of creating the account,
-	 * verifying ownership, crediting, etc. etc.
-	 */
 	//----------------------------------------------------------
-	public void processTransaction(Properties props) {
+	protected void processTransaction(Properties props) {
+        selectedArticleType.modify(props);
+		selectedArticleType.save();
+		transactionStatusMessage = (String)selectedArticleType.getState("UpdateStatusMessage");
+	}
+
+	protected void processArticleTypeSearch(Properties props) {
         description = props.getProperty("description");
         alphaCode = props.getProperty("alphaCode");
 		articleTypeCollection = new ArticleTypeCollection();
 
 		if (alphaCode != null && description == null) {
 			articleTypeCollection.findArticleTypeAlphaCode(alphaCode);
-			alphaCode = null;
 		} else if (description != null && alphaCode == null){
 			articleTypeCollection.findArticleTypeDesc(description);
-			description = null;
 		} else if (description != null && alphaCode != null){
             articleTypeCollection.findArticleTypeBoth(alphaCode, description);
-            alphaCode = null;
-            description = null;
         } else {
 			articleTypeCollection.findArticleTypeDesc("");
 		}
-		
 	}
 
 	//-----------------------------------------------------------
 	public Object getState(String key) {
         switch (key) {
-            case "TransactionError":
-                return transactionErrorMessage;
+            case "TransactionStatus":
+                return transactionStatusMessage;
             case "ArticleTypeCollection":
                 return articleTypeCollection;
-            case "Id":
-				if (articleTypeSelected != null)
-                	return articleTypeSelected.getState("Id");
-				else return null;
-            case "description":
-				if (articleTypeSelected != null)
-					return articleTypeSelected.getState("description");
-				else return null;
-            case "barcodePrefix":
-				if (articleTypeSelected != null)
-					return articleTypeSelected.getState("barcodePrefix");
-				else return null;
-            case "alphaCode":
-				if (articleTypeSelected != null)
-					return articleTypeSelected.getState("alphaCode");
-				else return null;
+			case "id":
+			case "description":
+			case "barcodePrefix":
+			case "alphaCode":
+				return selectedArticleType.getState(key);
             default:
                 System.err.println("ModifyArticleTypeTransaction: invalid key for getState: " + key);
                 break;
@@ -109,18 +96,22 @@ public class ModifyArticleTypeTransaction extends Transaction {
                 doYourJob();
                 break;
             case "ArticleTypeSearch":   // gets called from ModifyColorTransactionView
-                processTransaction((Properties)value);
+                processArticleTypeSearch((Properties)value);
                 break;
 			case "ArticleTypeSelected":
-				articleTypeSelected = new ArticleType((Properties)value);
+				selectedArticleType = new ArticleType((Properties)value);
 				createAndShowModifyArticleTypeView();
 				break;
 			case "CancelModifyArticleType":
-                swapToView(createView());
-                break;
-			case "Modify":
-				modify((Properties)value);
 				swapToView(createView());
+				Properties props = new Properties();
+				if (description != null)
+					props.setProperty("description", description);
+				if (alphaCode != null)
+					props.setProperty("alphaCode", alphaCode);
+				processArticleTypeSearch(props);
+                break;
+			case "DoModifyArticleType":
 				processTransaction((Properties)value);
 				break;
             default:
@@ -150,34 +141,10 @@ public class ModifyArticleTypeTransaction extends Transaction {
 		}
 	}
 
-	public void createAndShowArticleTypeCollectionView() {
-		View newView = ViewFactory.createView("ArticleTypeCollectionView", this);
-        Scene currentScene = new Scene(newView);
-        myViews.put("ArticleTypeCollectionView", currentScene);
-		swapToView(currentScene);
-	}
-
-	//------------------------------------------------------
-	protected void createAndShowReceiptView() {
-		// create our new view
-		View newView = ViewFactory.createView("ModifyColorReceipt", this);
-		Scene newScene = new Scene(newView);
-
-		myViews.put("ModifyColorReceiptView", newScene);
-
-		// make the view visible by installing it into the frame
-		swapToView(newScene);
-	}
-
 	protected void createAndShowModifyArticleTypeView() {
         View newView = ViewFactory.createView("ModifyArticleTypeView", this);
         Scene currentScene = new Scene(newView);
         myViews.put("ModifyArticleTypeView", currentScene);
 		swapToView(currentScene);
     }
-
-	protected void modify(Properties prop) {
-		articleTypeSelected.modify(prop);
-		articleTypeSelected.save();
-	}
 }

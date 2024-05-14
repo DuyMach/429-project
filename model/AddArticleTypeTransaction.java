@@ -17,7 +17,7 @@ import userinterface.ViewFactory;
 /** The class containing the ModifyColorTransaction for the ATM application */
 //==============================================================
 public class AddArticleTypeTransaction extends Transaction {
-	private String transactionErrorMessage = "";
+	private String transactionStatusMessage = "";
 
 	private ArticleType articleType;
     private String id;
@@ -30,8 +30,6 @@ public class AddArticleTypeTransaction extends Transaction {
 
         try {
             articleType = new ArticleType();
-            // colors.getColors();
-            // colorCollection = (ColorCollection)colors.getState("ColorCollection");
         }
         catch (Exception exc) {
             System.err.println(exc);
@@ -41,7 +39,7 @@ public class AddArticleTypeTransaction extends Transaction {
 	//----------------------------------------------------------
 	protected void setDependencies() {
 		dependencies = new Properties();
-		dependencies.setProperty("DoAddArticle", "TransactionError");
+		dependencies.setProperty("DoAddArticleType", "TransactionStatus");
 		dependencies.setProperty("CancelAddArticleType", "CancelTransaction");
 		dependencies.setProperty("OK", "CancelTransaction");
 
@@ -60,13 +58,14 @@ public class AddArticleTypeTransaction extends Transaction {
         alphaCode = props.getProperty("alphaCode");
 		articleType = new ArticleType(props);
 		articleType.save();
+		transactionStatusMessage = (String)articleType.getState("UpdateStatusMessage");
 	}
 
 	//-----------------------------------------------------------
 	public Object getState(String key) {
         switch (key) {
-            case "TransactionError":
-                return transactionErrorMessage;
+            case "TransactionStatus":
+                return transactionStatusMessage;
             case "Id":
                 return id;
             case "Description":
@@ -88,7 +87,7 @@ public class AddArticleTypeTransaction extends Transaction {
             case "DoYourJob":
                 doYourJob();
                 break;
-            case "DoAddArticleType":   // gets called from ModifyColorTransactionView
+            case "DoAddArticleType":
                 processTransaction((Properties)value);
                 break;
 			case "CancelAddArticleType":
@@ -119,17 +118,5 @@ public class AddArticleTypeTransaction extends Transaction {
 		else {
 			return currentScene;
 		}
-	}
-
-	//------------------------------------------------------
-	protected  void createAndShowReceiptView() {
-		// create our new view
-		View newView = ViewFactory.createView("ModifyColorReceipt", this);
-		Scene newScene = new Scene(newView);
-
-		myViews.put("ModifyColorReceiptView", newScene);
-
-		// make the view visible by installing it into the frame
-		swapToView(newScene);
 	}
 }

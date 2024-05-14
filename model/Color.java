@@ -161,6 +161,8 @@ public class Color extends EntityBase {
 
     public void delete() {
         persistentState.setProperty("status", "Inactive");
+        this.update();
+        updateStatusMessage = "Color deleted successfully in database!";
     }
 
     private void setDependencies() {

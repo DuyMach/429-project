@@ -109,7 +109,7 @@ public class CheckoutInventoryItemView extends View {
 
 		String color2DescString = (String) myModel.getState("color2Description");
 		if (color2DescString.equals("Inactive color")) {
-			color2.setText("You don't got no color 2, you colorless hoe"); // Subject to change
+			color2.setText(""); 
 		} else {
 			color2.setText((String)(myModel.getState("color2Description")));
 		}

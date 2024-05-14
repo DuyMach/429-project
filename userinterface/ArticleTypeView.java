@@ -52,14 +52,7 @@ public class ArticleTypeView extends View{
 
         getChildren().add(container);
 
-        populateFields();
-    }
-
-    private void populateFields() {
-        description.setText((String)myModel.getState("description"));
-        barcodePrefix.setText((String)myModel.getState("barcodePrefix"));
-        alphaCode.setText((String)myModel.getState("alphaCode"));
-        // status.setText((String)myModel.getState("Status"));
+        myModel.subscribe("TransactionStatus", this);
     }
 
     private MessageView createStatusLog(String initialMessage) {
@@ -126,7 +119,7 @@ public class ArticleTypeView extends View{
         });
         doneCont.getChildren().add(cancelButton);
 
-        doneButton = new Button("Done");
+        doneButton = new Button("Submit");
         doneButton.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         doneButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -135,7 +128,6 @@ public class ArticleTypeView extends View{
                 if (validate()) {
                     Properties prop = getInput();
                     myModel.stateChangeRequest("DoAddArticleType", prop);
-                    statusLog.displayMessage("Successfully added ArticleType!");
                 }
             }
         });
@@ -171,12 +163,12 @@ public class ArticleTypeView extends View{
             String alphaCodeString = alphaCode.getText();
 
             if (barcodePrefixString == null || descString == null || alphaCodeString == null){
-                statusLog.displayErrorMessage("Cannot have any empty fields!");
+                displayErrorMessage("Cannot have any empty fields!");
                 return false;
             }
 
             if (barcodePrefixString.length() != 2 || alphaCodeString.length() != 2){
-                statusLog.displayErrorMessage("BarcodePrefix and Alpha Code must be exactly 2 characters!");
+                displayErrorMessage("BarcodePrefix and Alpha Code must be exactly 2 characters!");
                 return false;
             }
         } catch (Exception e) {
@@ -184,10 +176,6 @@ public class ArticleTypeView extends View{
             return false;
         }
         return true;
-    }
-
-    private void clearErrorMessage() {
-        statusLog.clearErrorMessage();
     }
 
     private Node createTitle() {
@@ -204,9 +192,32 @@ public class ArticleTypeView extends View{
         return container;
     }
 
-    @Override
     public void updateState(String key, Object value) {
+        clearErrorMessage();
 
+        if (key.equals("TransactionStatus")) {
+            String val = (String) value;
+            if ((val.startsWith("ERR")) || (val.startsWith("Err"))) {
+                displayErrorMessage(val);
+            } else {
+                displayMessage(val);
+            }
+        }
+    }
+
+    public void displayErrorMessage(String message)
+    {
+        statusLog.displayErrorMessage(message);
+    }
+
+    public void displayMessage(String message)
+    {
+        statusLog.displayMessage(message);
+    }
+
+    public void clearErrorMessage()
+    {
+        statusLog.clearErrorMessage();
     }
 }
 

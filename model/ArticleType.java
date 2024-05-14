@@ -120,8 +120,6 @@ public class ArticleType extends EntityBase implements IView
         }
 	 }
 
-	// Can also be used to create a NEW Book (if the system it is part of
-	// allows for a new account to be set up)
 	//----------------------------------------------------------
 	public ArticleType(Properties props)
 	{
@@ -156,8 +154,6 @@ public class ArticleType extends EntityBase implements IView
 	private void setDependencies()
 	{
 		dependencies = new Properties();
-
-		dependencies.setProperty("BookCollection", "BookCollectionMessage");
 		myRegistry.setDependencies(dependencies);
 	}
 
@@ -202,20 +198,25 @@ public class ArticleType extends EntityBase implements IView
 				whereClause.setProperty("id",
 						persistentState.getProperty("id"));
 				updatePersistentState(mySchema, persistentState, whereClause);
-				updateStatusMessage = "ArticleType data for id : " + persistentState.getProperty("id") + " updated successfully in database!";
+				updateStatusMessage = "Article Type updated successfully in database!";
 			}
 			else
 			{
 				// insert
 				Integer id = insertAutoIncrementalPersistentState(mySchema, persistentState);
 				persistentState.setProperty("id", "" + id.intValue());
-				updateStatusMessage = "ArticleType data for new ArticleType : " +  persistentState.getProperty("id")
-						+ "installed successfully in database!";
+				updateStatusMessage = "Article Type installed successfully in database!";
 			}
 		}
 		catch (SQLException ex)
 		{
-			updateStatusMessage = "Error in installing book data in database!";
+			if (ex.getErrorCode() == 1062) { // duplicate key
+				updateStatusMessage = "Error: Article Type with barcode prefix " + 
+					persistentState.getProperty("barcodePrefix")+ " already exists";
+			}
+			else {
+				updateStatusMessage = "Error while updating article type in database";
+			}
 		}
 		//DEBUG System.out.println("updateStateInDatabase " + updateStatusMessage);
 	}

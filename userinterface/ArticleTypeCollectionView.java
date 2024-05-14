@@ -80,7 +80,7 @@ public class ArticleTypeCollectionView extends View
 
 		getChildren().add(container);
 
-		myModel.subscribe("Modify", this);
+		myModel.subscribe("ArticleTypeCollection", this);
 		myModel.subscribe("CancelDeleteArticleType", this);
 	}
 
@@ -255,7 +255,7 @@ public class ArticleTypeCollectionView extends View
 	//--------------------------------------------------------------------------
 	public void updateState(String key, Object value) {
         switch (key) {
-            case "Modify":
+            case "ArticleTypeCollection":
 				getEntryTableModelValues();
 				break;
 			case "CancelDeleteArticleType":

@@ -127,7 +127,7 @@ public class CheckoutInventoryItemTransaction extends Transaction{
         try {
             item.modify(props);
             item.update();
-            transactionStatusMessage = "Item inserted successfully";
+            transactionStatusMessage = "Item successfully checked out!";
         }
         catch (Exception exc) {
             transactionStatusMessage = exc.getMessage();
